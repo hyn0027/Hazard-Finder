@@ -7,4 +7,4 @@ ML_system:
     - "Applicants seeking clearer job descriptions"
   ML_purpose: "LLMs can help summarize job descriptions to make them more accessible and understandable for potential applicants."
 
-checkpoint: "identify_losses"
+checkpoint: None
