@@ -1,0 +1,10 @@
+chatbot:
+  model: "gpt-4o"
+
+ML_system:
+  system_aim: "Summarize a job Description to match with potential applicants"
+  use_cases:
+    - "Applicants seeking clearer job descriptions"
+  ML_purpose: "LLMs can help summarize job descriptions to make them more accessible and understandable for potential applicants."
+
+checkpoint: "identify_losses"
