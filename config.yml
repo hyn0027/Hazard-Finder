@@ -2,9 +2,9 @@ chatbot:
   model: "gpt-4o"
 
 ML_system:
-  system_aim: "Summarize a job Description to match with potential applicants"
+  system_aim: "Use a phone camera to detect organisms"
   use_cases:
-    - "Applicants seeking clearer job descriptions"
-  ML_purpose: "LLMs can help summarize job descriptions to make them more accessible and understandable for potential applicants."
+    - "Users who like nature and are curious to track the organisms they see"
+  ML_purpose: "Identify the species present in camera frame"
 
 checkpoint: None
