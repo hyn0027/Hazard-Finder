@@ -1,10 +1,14 @@
 chatbot:
-  model: "gpt-4o"
+  model: "gpt-5"
 
 ML_system:
-  system_aim: "Use a phone camera to detect organisms"
+  system_aim: "A dashcam that performs normal dashcam work plus help finding missing children"
   use_cases:
-    - "Users who like nature and are curious to track the organisms they see"
-  ML_purpose: "Identify the species present in camera frame"
+    - "Record and store video footage while driving"
+    - "Detect and log traffic violations"
+    - "Identify and alert about potential hazards on the road"
+    - "Recognize and alert about missing children based on provided descriptions or images"
+  ML_purpose: 
+    - "Recognize and match faces of missing children"
 
 checkpoint: None

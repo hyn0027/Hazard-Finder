@@ -61,7 +61,8 @@ def identify_stakeholders(
 
     # Get chatbot response
     res, meta = chatbot.completions(
-        message_list, substitution_dict=substitution_dict, temperature=0.0
+        message_list,
+        substitution_dict=substitution_dict,
     )
 
     # Parse returned list of stakeholders into name and description
@@ -123,7 +124,8 @@ def identify_values(
         item = stakeholders[i]
         substitution_dict["stakeholder"] = f"{item['name']} - {item['description']}"
         res, meta = chatbot.completions(
-            message_list, substitution_dict=substitution_dict, temperature=0.0
+            message_list,
+            substitution_dict=substitution_dict,
         )
         values_content: TextContent = res[0][0]
         value = values_content.split_ordered_list()
@@ -180,7 +182,8 @@ def identify_losses(
         for val in item["values"]:
             substitution_dict["value"] = val
             res, meta = chatbot.completions(
-                message_list, substitution_dict=substitution_dict, temperature=0.0
+                message_list,
+                substitution_dict=substitution_dict,
             )
             loss_content: TextContent = res[0][0]
             loss = loss_content.text.strip()
@@ -244,7 +247,8 @@ def identify_hazards(
             loss = item["losses"][j]
             substitution_dict["loss"] = loss
             res, meta = chatbot.completions(
-                message_list, substitution_dict=substitution_dict, temperature=0.0
+                message_list,
+                substitution_dict=substitution_dict,
             )
             hazard_content: TextContent = res[0][0]
             hazard = hazard_content.split_ordered_list()
@@ -368,7 +372,8 @@ def consolidate_hazard_list(
         hazards = [f"- {hazard}" for hazard in hazards]
         substitution_dict["hazard_list"] = "\n".join(hazards)
         res, meta = chatbot.completions(
-            message_list, substitution_dict=substitution_dict, temperature=0.0
+            message_list,
+            substitution_dict=substitution_dict,
         )
         consolidated_hazards: TextContent = res[0][0]
         consolidated_hazards = consolidated_hazards.split_ordered_list()
