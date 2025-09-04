@@ -1,0 +1,118 @@
+[
+    {
+        "name": "End Users (Developers)",
+        "description": "Individuals who authorize the agent to access Github on their behalf"
+    },
+    {
+        "name": "Organization Owners",
+        "description": "Administrators responsible for GitHub organizations whose repos may be managed by the agent"
+    },
+    {
+        "name": "Repository Maintainers",
+        "description": "People who manage repository health, triage, and merging"
+    },
+    {
+        "name": "Collaborators/Contributors",
+        "description": "Users with write access who contribute code and content"
+    },
+    {
+        "name": "Project Managers/Product Owners",
+        "description": "Plan and prioritize work reflected in issues and PRs the agent creates or summarizes"
+    },
+    {
+        "name": "Security Engineers/Application Security",
+        "description": "Oversee secure coding and secrets hygiene related to agent actions"
+    },
+    {
+        "name": "Compliance Officers",
+        "description": "Ensure the agent\u2019s activities comply with internal policies and external standards"
+    },
+    {
+        "name": "Privacy/Data Protection Officers",
+        "description": "Oversee handling of private repo data and any personal data in issues/PRs"
+    },
+    {
+        "name": "Risk Management/Governance",
+        "description": "Assess and mitigate operational and technology risks of autonomous changes"
+    },
+    {
+        "name": "Open-Source Community Maintainers",
+        "description": "OSS maintainers impacted by agent-authored issues/PRs"
+    },
+    {
+        "name": "Issue Reporters",
+        "description": "Users who create issues that the agent reads, summarizes, or responds to"
+    },
+    {
+        "name": "Pull Request Authors",
+        "description": "Contributors whose PRs the agent summarizes, reviews, approves, or merges"
+    },
+    {
+        "name": "Downstream Dependents",
+        "description": "Projects and services relying on repos the agent modifies"
+    },
+    {
+        "name": "Upstream Project Maintainers",
+        "description": "Owners of dependencies influenced by agent-proposed fixes or changes"
+    },
+    {
+        "name": "End Users/Customers of the Software",
+        "description": "People using products built from repos affected by agent changes"
+    },
+    {
+        "name": "Data Scientists/ML Engineers (Repo Authors)",
+        "description": "Owners of notebooks/models the agent may run or modify"
+    },
+    {
+        "name": "Students/Educators",
+        "description": "Use the agent for learning and coursework on GitHub repositories"
+    },
+    {
+        "name": "GitHub (Platform Provider)",
+        "description": "API and service provider whose policies and availability affect the agent"
+    },
+    {
+        "name": "GitHub Organization Administrators",
+        "description": "Configure permissions, SSO, and app/scopes for agent access"
+    },
+    {
+        "name": "OAuth/App Authorization Administrators",
+        "description": "Approve scopes and manage tokens used by the agent"
+    },
+    {
+        "name": "Code Sandbox Platform Engineers",
+        "description": "Build and maintain the secure execution environment the agent uses"
+    },
+    {
+        "name": "Agent Provider",
+        "description": "Develop and operate the GitHub agent platform"
+    },
+    {
+        "name": "Intellectual Property Rights Holders",
+        "description": "Owners of copyrighted material possibly referenced or modified"
+    },
+    {
+        "name": "Third-Party Integration Vendors",
+        "description": "Tools connected via webhooks affected by agent commits or PRs"
+    },
+    {
+        "name": "Package Registry Operators (npm, PyPI, Maven Central)",
+        "description": "Receive and distribute releases produced from repos"
+    },
+    {
+        "name": "Deployment Platform Owners (Cloud, App Stores)",
+        "description": "Downstream platforms receiving agent-triggered releases"
+    },
+    {
+        "name": "Data Subjects in Repos/Issues",
+        "description": "Individuals whose personal data may be present in repository content"
+    },
+    {
+        "name": "Fork Maintainers",
+        "description": "Owners of repository forks where the agent might open PRs or sync changes"
+    },
+    {
+        "name": "License Compliance Analysts",
+        "description": "Track third-party license obligations in code authored or modified by the agent"
+    }
+]

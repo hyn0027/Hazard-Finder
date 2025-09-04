@@ -152,4 +152,4 @@ Agent_system:
     - "Create, delete, or modify files and push to the repo using the code sandbox"
     - "Run code using the code sandbox"
 
-checkpoint: "identify_hazards"
+checkpoint: "identify_values"

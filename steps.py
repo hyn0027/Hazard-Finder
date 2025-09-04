@@ -61,7 +61,8 @@ def identify_stakeholders(
 
     # Get chatbot response
     res, meta = chatbot.completions(
-        message_list, substitution_dict=substitution_dict, temperature=0.0
+        message_list,
+        substitution_dict=substitution_dict,
     )
 
     # Parse returned list of stakeholders into name and description
@@ -98,6 +99,11 @@ def identify_values(
                 "2. A Short phrase describing value or goal 2\n"
                 "3. A Short phrase describing value or goal 3\n"
                 "4. A Short phrase describing value or goal 4\n"
+                "5. A Short phrase describing value or goal 5\n"
+                "6. A Short phrase describing value or goal 6\n"
+                "7. A Short phrase describing value or goal 7\n"
+                "8. A Short phrase describing value or goal 8\n"
+                "9. A Short phrase describing value or goal 9\n"
                 "... \n"
                 "... \n"
             ),
@@ -123,7 +129,8 @@ def identify_values(
         item = stakeholders[i]
         substitution_dict["stakeholder"] = f"{item['name']} - {item['description']}"
         res, meta = chatbot.completions(
-            message_list, substitution_dict=substitution_dict, temperature=0.0
+            message_list,
+            substitution_dict=substitution_dict,
         )
         values_content: TextContent = res[0][0]
         value = values_content.split_ordered_list()
@@ -180,7 +187,8 @@ def identify_losses(
         for val in item["values"]:
             substitution_dict["value"] = val
             res, meta = chatbot.completions(
-                message_list, substitution_dict=substitution_dict, temperature=0.0
+                message_list,
+                substitution_dict=substitution_dict,
             )
             loss_content: TextContent = res[0][0]
             loss = loss_content.text.strip()
@@ -205,13 +213,19 @@ def identify_hazards(
             "system",
             TextContent(
                 "Given a description of a system, and a specific loss of a stakeholder, "
-                "identify and list potential states and conditions that could directly lead to this loss under worst-case conditions. "
+                "identify and list potential system-level states and conditions that could directly lead to this loss under worst-case conditions. "
                 "Provide concise, standalone descriptions of these states and conditions. "
                 "Do not include any cause, explanation, result, or solution to the state or condition. "
                 "Format your response as follows:\n"
                 "1. State or condition 1\n"
                 "2. State or condition 2\n"
                 "3. State or condition 3\n"
+                "4. State or condition 4\n"
+                "5. State or condition 5\n"
+                "6. State or condition 6\n"
+                "7. State or condition 7\n"
+                "8. State or condition 8\n"
+                "9. State or condition 9\n"
                 "... \n"
                 "... \n"
             ),
@@ -244,7 +258,8 @@ def identify_hazards(
             loss = item["losses"][j]
             substitution_dict["loss"] = loss
             res, meta = chatbot.completions(
-                message_list, substitution_dict=substitution_dict, temperature=0.0
+                message_list,
+                substitution_dict=substitution_dict,
             )
             hazard_content: TextContent = res[0][0]
             hazard = hazard_content.split_ordered_list()
@@ -368,7 +383,8 @@ def consolidate_hazard_list(
         hazards = [f"- {hazard}" for hazard in hazards]
         substitution_dict["hazard_list"] = "\n".join(hazards)
         res, meta = chatbot.completions(
-            message_list, substitution_dict=substitution_dict, temperature=0.0
+            message_list,
+            substitution_dict=substitution_dict,
         )
         consolidated_hazards: TextContent = res[0][0]
         consolidated_hazards = consolidated_hazards.split_ordered_list()

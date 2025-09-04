@@ -1,3 +1,6 @@
+
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -194,5 +197,13 @@ cython_debug/
 .cursorindexingignore
 
 toysys/
+.DS_Store
 
-*.json
+# *.json
+# 
+# */config.yml
+
+
+# exclude calendar_agent and github_agent folders (they are visible in the repo)
+# !calendar_agent/
+# !github_agent/

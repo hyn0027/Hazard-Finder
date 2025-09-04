@@ -1,0 +1,330 @@
+[
+    {
+        "name": "End Users (Repository Owners)",
+        "description": "Individuals who authorize the agent to manage their GitHub repositories"
+    },
+    {
+        "name": "Organization Owners",
+        "description": "Administrators responsible for GitHub organizations whose repos may be managed by the agent"
+    },
+    {
+        "name": "Repository Maintainers",
+        "description": "People who manage repository health, triage, and merging"
+    },
+    {
+        "name": "Collaborators/Contributors",
+        "description": "Users with write access who contribute code and content"
+    },
+    {
+        "name": "Code Reviewers",
+        "description": "Humans reviewing changes alongside or in response to agent activity"
+    },
+    {
+        "name": "Code Owners",
+        "description": "Required approvers whose rules the agent must respect"
+    },
+    {
+        "name": "Project Managers/Product Owners",
+        "description": "Plan and prioritize work reflected in issues and PRs the agent creates or summarizes"
+    },
+    {
+        "name": "Release Managers",
+        "description": "Oversee releases potentially impacted by agent merges and code changes"
+    },
+    {
+        "name": "QA/Test Engineers",
+        "description": "Validate and test changes suggested or applied by the agent"
+    },
+    {
+        "name": "DevOps/Platform Engineers",
+        "description": "Maintain CI/CD pipelines and environments affected by agent commits and PRs"
+    },
+    {
+        "name": "Site Reliability Engineers (SRE)",
+        "description": "Ensure reliability of systems influenced by code the agent modifies"
+    },
+    {
+        "name": "Security Engineers/Application Security",
+        "description": "Oversee secure coding and secrets hygiene related to agent actions"
+    },
+    {
+        "name": "Compliance Officers",
+        "description": "Ensure the agent\u2019s activities comply with internal policies and external standards"
+    },
+    {
+        "name": "Legal/IP Counsel",
+        "description": "Manage licensing, contributor agreements, and IP risks of agent-generated code"
+    },
+    {
+        "name": "Privacy/Data Protection Officers",
+        "description": "Oversee handling of private repo data and any personal data in issues/PRs"
+    },
+    {
+        "name": "Auditors (Internal/External)",
+        "description": "Review access, approvals, and change control for agent-driven actions"
+    },
+    {
+        "name": "Risk Management/Governance",
+        "description": "Assess and mitigate operational and technology risks of autonomous changes"
+    },
+    {
+        "name": "Open Source Program Office (OSPO)",
+        "description": "Governs enterprise OSS usage and contributions made via the agent"
+    },
+    {
+        "name": "Open-Source Community Maintainers",
+        "description": "OSS maintainers impacted by agent-authored issues/PRs"
+    },
+    {
+        "name": "Issue Reporters",
+        "description": "Users who create issues that the agent reads, summarizes, or responds to"
+    },
+    {
+        "name": "Pull Request Authors",
+        "description": "Contributors whose PRs the agent summarizes, reviews, approves, or merges"
+    },
+    {
+        "name": "Downstream Dependents",
+        "description": "Projects and services relying on repos the agent modifies"
+    },
+    {
+        "name": "Upstream Project Maintainers",
+        "description": "Owners of dependencies influenced by agent-proposed fixes or changes"
+    },
+    {
+        "name": "End Users/Customers of the Software",
+        "description": "People using products built from repos affected by agent changes"
+    },
+    {
+        "name": "Technical Writers/Documentation Maintainers",
+        "description": "Keep docs accurate when the agent changes code or content"
+    },
+    {
+        "name": "Designers/UX Writers",
+        "description": "Owners of design artifacts or content the agent might modify"
+    },
+    {
+        "name": "Localization/Translation Teams",
+        "description": "Manage i18n strings and translations affected by agent edits"
+    },
+    {
+        "name": "Data Scientists/ML Engineers (Repo Authors)",
+        "description": "Owners of notebooks/models the agent may run or modify"
+    },
+    {
+        "name": "Students/Educators",
+        "description": "Use the agent for learning and coursework on GitHub repositories"
+    },
+    {
+        "name": "Community Managers/Moderators",
+        "description": "Enforce community guidelines in issues/PRs where the agent participates"
+    },
+    {
+        "name": "GitHub (Platform Provider)",
+        "description": "API and service provider whose policies and availability affect the agent"
+    },
+    {
+        "name": "GitHub Organization Administrators",
+        "description": "Configure permissions, SSO, and app/scopes for agent access"
+    },
+    {
+        "name": "GitHub Enterprise Administrators",
+        "description": "Govern enterprise-wide app approvals, auditing, and controls"
+    },
+    {
+        "name": "GitHub Security Features Teams (Dependabot/Code Scanning)",
+        "description": "Interact with fixes and alerts the agent may act on"
+    },
+    {
+        "name": "GitHub Actions/Runners Maintainers",
+        "description": "CI environments impacted by agent-triggered workflows"
+    },
+    {
+        "name": "OAuth/App Authorization Administrators",
+        "description": "Approve scopes and manage tokens used by the agent"
+    },
+    {
+        "name": "Identity and Access Management (SSO/IdP) Teams",
+        "description": "Manage identities and access controls for repos the agent touches"
+    },
+    {
+        "name": "Secret Management Owners",
+        "description": "Ensure secrets remain protected when the agent reads/writes code"
+    },
+    {
+        "name": "Code Sandbox Platform Engineers",
+        "description": "Build and maintain the secure execution environment the agent uses"
+    },
+    {
+        "name": "Cloud/Infrastructure Providers",
+        "description": "Host compute and storage underpinning the sandbox and agent"
+    },
+    {
+        "name": "Observability/Logging Teams",
+        "description": "Collect and monitor telemetry and logs for the agent and sandbox"
+    },
+    {
+        "name": "Backup/Disaster Recovery Administrators",
+        "description": "Ensure repos and sandbox data are backed up and recoverable"
+    },
+    {
+        "name": "Incident Response/SOC",
+        "description": "Respond to security or operational incidents involving the agent"
+    },
+    {
+        "name": "Red Team/Penetration Testers",
+        "description": "Test the agent and sandbox for security weaknesses"
+    },
+    {
+        "name": "Performance/Scalability Engineers",
+        "description": "Ensure the agent operates efficiently under load"
+    },
+    {
+        "name": "Customer Support/Helpdesk (Agent)",
+        "description": "Assist users encountering issues with the agent"
+    },
+    {
+        "name": "Customer Success/Onboarding (Agent)",
+        "description": "Drive adoption and best practices for agent use"
+    },
+    {
+        "name": "Sales/Account Management (Agent Vendor)",
+        "description": "Manage commercial relationships for the agent product"
+    },
+    {
+        "name": "Procurement/Vendor Management",
+        "description": "Approve and manage acquisition and contracts for the agent"
+    },
+    {
+        "name": "Finance/Accounting",
+        "description": "Track billing, cost allocation, and ROI of agent usage"
+    },
+    {
+        "name": "Executive Sponsors/Leadership",
+        "description": "Set strategy and risk tolerance for autonomous development tools"
+    },
+    {
+        "name": "Training/Learning & Development",
+        "description": "Provide training on safe and effective agent use"
+    },
+    {
+        "name": "Documentation Team (Agent)",
+        "description": "Document agent capabilities, permissions, and procedures"
+    },
+    {
+        "name": "Product Management (Agent)",
+        "description": "Define roadmap, guardrails, and policy for agent behavior"
+    },
+    {
+        "name": "Software Engineers (Agent)",
+        "description": "Design and implement the agent and integrations with GitHub"
+    },
+    {
+        "name": "QA/Testing Engineers (Agent)",
+        "description": "Validate agent behaviors and tool correctness"
+    },
+    {
+        "name": "DevOps/SRE (Agent)",
+        "description": "Operate, scale, and monitor the agent and sandbox infrastructure"
+    },
+    {
+        "name": "Security/Privacy Engineers (Agent)",
+        "description": "Implement security controls and data minimization for the agent"
+    },
+    {
+        "name": "AI/ML Engineers and Prompt Designers (Agent)",
+        "description": "Develop models and prompts for code reasoning and edits"
+    },
+    {
+        "name": "Ethics/Responsible AI Board",
+        "description": "Govern autonomy, bias, and approval policies for automated code changes"
+    },
+    {
+        "name": "Data Protection Authorities/Regulators",
+        "description": "Enforce GDPR/CCPA and relevant data protection laws"
+    },
+    {
+        "name": "Sectoral Regulators (e.g., Finance/Healthcare)",
+        "description": "Oversee compliance if repos involve regulated domains"
+    },
+    {
+        "name": "Standards Bodies (e.g., ISO/NIST)",
+        "description": "Provide secure SDLC and AI guidance relevant to the agent\u2019s operation"
+    },
+    {
+        "name": "Open-Source License Stewards (OSI/FSF)",
+        "description": "Define license norms affecting generated code usage"
+    },
+    {
+        "name": "Intellectual Property Rights Holders",
+        "description": "Owners of copyrighted material possibly referenced or modified"
+    },
+    {
+        "name": "Bug Bounty Researchers",
+        "description": "Report vulnerabilities in repos or in the agent platform"
+    },
+    {
+        "name": "Cyber Insurance Providers",
+        "description": "Underwrite risks related to automated repo changes"
+    },
+    {
+        "name": "Third-Party Integration Vendors",
+        "description": "Tools connected via webhooks affected by agent commits or PRs"
+    },
+    {
+        "name": "Package Registry Operators (npm, PyPI, Maven Central)",
+        "description": "Receive and distribute releases produced from repos"
+    },
+    {
+        "name": "Deployment Platform Owners (Cloud, App Stores)",
+        "description": "Downstream platforms receiving agent-triggered releases"
+    },
+    {
+        "name": "Data Subjects in Repos/Issues",
+        "description": "Individuals whose personal data may be present in repository content"
+    },
+    {
+        "name": "Accessibility Advocates/Users",
+        "description": "Ensure code/docs remain accessible after agent edits"
+    },
+    {
+        "name": "Environmental/Sustainability Officers",
+        "description": "Monitor compute and energy footprint of the agent/sandbox"
+    },
+    {
+        "name": "Competitors/Peer Projects",
+        "description": "Indirectly influenced by norms and velocity set by agent usage"
+    },
+    {
+        "name": "Media/Analysts/Tech Press",
+        "description": "Observe and report on impacts of automated repository management"
+    },
+    {
+        "name": "Academic/Industry Researchers",
+        "description": "Study effects on developer productivity and open-source ecosystems"
+    },
+    {
+        "name": "Internal Change Management Boards",
+        "description": "Approve production-impacting merges initiated by the agent"
+    },
+    {
+        "name": "Change Advisory Boards (CAB)",
+        "description": "Govern release risk for critical systems influenced by agent changes"
+    },
+    {
+        "name": "Localization Vendors",
+        "description": "External partners translating content the agent modifies"
+    },
+    {
+        "name": "End-User Support Teams (Product)",
+        "description": "Handle customer issues caused by agent-induced changes in product behavior"
+    },
+    {
+        "name": "Fork Maintainers",
+        "description": "Owners of repository forks where the agent might open PRs or sync changes"
+    },
+    {
+        "name": "License Compliance Analysts",
+        "description": "Track third-party license obligations in code authored or modified by the agent"
+    }
+]

@@ -57,9 +57,39 @@ def system_description(config) -> str:
     Construct a textual description of the ML system from the configuration.
     """
 
-    system_aim = config["ML_system"]["system_aim"]
-    use_cases = config["ML_system"]["use_cases"]
-    ML_purpose = config["ML_system"]["ML_purpose"]
+    system_aim = config["Agent_system"]["system_aim"]
+    use_cases = config["Agent_system"]["use_cases"]
+    tools = config["Agent_system"]["tools"]
+
+    tool_descriptions = ""
+
+    for tool in tools:
+        tool_name = tool["name"]
+        tool_description = tool["description"]
+        parameters = tool.get("parameters", [])
+        response = tool.get("response", [])
+
+        # Format parameters and responses as bullet-point lists
+        if parameters:
+            parameters = [
+                f"- {param['name']}: {param['description']}" for param in parameters
+            ]
+            parameters = "\n".join(parameters)
+        else:
+            parameters = "None"
+
+        if response:
+            response = [f"- {resp['name']}: {resp['description']}" for resp in response]
+            response = "\n".join(response)
+        else:
+            response = "None"
+
+        tool_descriptions += (
+            f"Tool: {tool_name}\n"
+            f"Description: {tool_description}\n"
+            f"Parameters:\n{parameters}\n"
+            f"Response:\n{response}\n\n"
+        )
 
     # Format use cases as a bullet-point list
     use_cases = [f"- {use_case}" for use_case in use_cases]
@@ -67,7 +97,7 @@ def system_description(config) -> str:
 
     # Return a descriptive summary of the system
     return (
-        f"The software system is used to:\n{system_aim}\n\n"
-        f"Use cases of this software system include:\n{use_cases}\n\n"
-        f"There are ML models as components in this software system, they are used to to: \n{ML_purpose}"
+        f"The agent is used to:\n{system_aim}\n\n"
+        f"Use cases of this agent include:\n{use_cases}\n\n"
+        f"The agent has access to the following tools:\n{tool_descriptions}"
     )
