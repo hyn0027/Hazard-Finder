@@ -30,9 +30,10 @@ def identify_stakeholders(
         DevSysUserMessage(
             "system",
             TextContent(
-                "Based on the description of the software system, identify and list all potential stakeholders related to the system, both direct and indirect. "
-                "Consider any individuals, groups, sub-populations, organizations, or entities that may develop, use, maintain, support, be affected by, or influence the system in any way. "
-                "Think expansively and systematically across all possible domains (technical, organizational, social, regulatory, economic, environmental, etc.) to ensure a comprehensive stakeholder list. "
+                "Based on the description of a software system and a function enabled by LLM-powered agents in that software system, "
+                "identify and list all potential stakeholders related to the function, both direct and indirect. "
+                "Consider any individuals, groups, sub-populations, organizations, or entities that may develop, use, maintain, support, be affected by, or influence the function in any way. "
+                "Think expansively across all possible domains to ensure a comprehensive stakeholder list. "
                 "Format your response as follows:\n"
                 "1. Stakeholder Name - Short definition of the stakeholder\n"
                 "2. Stakeholder Name - Short definition of the stakeholder\n"
@@ -41,8 +42,6 @@ def identify_stakeholders(
                 "5. Stakeholder Name - Short definition of the stakeholder\n"
                 "6. Stakeholder Name - Short definition of the stakeholder\n"
                 "7. Stakeholder Name - Short definition of the stakeholder\n"
-                "8. Stakeholder Name - Short definition of the stakeholder\n"
-                "9. Stakeholder Name - Short definition of the stakeholder\n"
                 "...\n"
                 "...\n"
             ),
@@ -54,7 +53,11 @@ def identify_stakeholders(
         DevSysUserMessage(
             "user",
             TextContent(
-                'Software System Description: \n"""{system_description}\n"""\nStakeholders:\n'
+                "Software System Description: \n"
+                "{system_description}\n\n"
+                "Agent Function Description: \n"
+                "{agent_function}\n\n"
+                "Stakeholders:\n"
             ),
         )
     )
@@ -92,8 +95,9 @@ def identify_values(
         DevSysUserMessage(
             "system",
             TextContent(
-                "Based on the system description, "
-                "identify the high-level values and goals that the given stakeholder may expect from the system. "
+                "Based on the description of a software system and a function enabled by LLM-powered agents in that software system, "
+                "given a specific stakeholder, "
+                "identify the high-level, fundamental values and goals that the stakeholder may expect from the function. "
                 "Format your response as follows:\n"
                 "1. A Short phrase describing value or goal 1\n"
                 "2. A Short phrase describing value or goal 2\n"
@@ -102,8 +106,6 @@ def identify_values(
                 "5. A Short phrase describing value or goal 5\n"
                 "6. A Short phrase describing value or goal 6\n"
                 "7. A Short phrase describing value or goal 7\n"
-                "8. A Short phrase describing value or goal 8\n"
-                "9. A Short phrase describing value or goal 9\n"
                 "... \n"
                 "... \n"
             ),
@@ -115,8 +117,10 @@ def identify_values(
         DevSysUserMessage(
             "user",
             TextContent(
-                "System Description:\n"
+                "Software System Description: \n"
                 "{system_description}\n\n"
+                "Agent Function Description: \n"
+                "{agent_function}\n\n"
                 "Stakeholder:\n"
                 "{stakeholder}\n\n"
                 "Values and Goals:\n"
@@ -146,7 +150,10 @@ def identify_values(
 
 # Identify potential losses from values using chatbot
 def identify_losses(
-    chatbot: ChatCompletionEndPoint, substitution_dict: SubstitutionDict, values: list
+    chatbot: ChatCompletionEndPoint,
+    substitution_dict: SubstitutionDict,
+    values: list,
+    dropout: float = 0.0,
 ):
     message_list = MessageList()
 
@@ -155,7 +162,9 @@ def identify_losses(
         DevSysUserMessage(
             "system",
             TextContent(
-                "Using the system description and a given high-level value or goal of the stakeholder, "
+                "Based on the description of a software system and a function enabled by LLM-powered agents in that software system, "
+                "given a specific stakeholder, "
+                "and given a high-level value or goal that the stakeholder may expect from the function, "
                 "reverse the value or goal into a corresponding high-level loss. "
                 "Format your response as follows:\n"
                 "A Short phrase describing the loss"
@@ -168,11 +177,13 @@ def identify_losses(
         DevSysUserMessage(
             "user",
             TextContent(
-                "System Description:\n"
+                "Software System Description: \n"
                 "{system_description}\n\n"
+                "Agent Function Description: \n"
+                "{agent_function}\n\n"
                 "Stakeholder:\n"
                 "{stakeholder}\n\n"
-                "Values pr goal:\n"
+                "Values or goal:\n"
                 "{value}\n\n"
                 "Loss:\n"
             ),
@@ -185,6 +196,8 @@ def identify_losses(
         substitution_dict["stakeholder"] = f"{item['name']} - {item['description']}"
         logging.info(f"Identifying losses for {item['name']}")
         for val in item["values"]:
+            if dropout > 0 and random.random() < dropout:
+                continue
             substitution_dict["value"] = val
             res, meta = chatbot.completions(
                 message_list,
@@ -203,7 +216,10 @@ def identify_losses(
 
 # Identify hazards that could lead to each loss
 def identify_hazards(
-    chatbot: ChatCompletionEndPoint, substitution_dict: SubstitutionDict, losses: list
+    chatbot: ChatCompletionEndPoint,
+    substitution_dict: SubstitutionDict,
+    losses: list,
+    dropout: float = 0.0,
 ):
     message_list = MessageList()
 
@@ -212,7 +228,8 @@ def identify_hazards(
         DevSysUserMessage(
             "system",
             TextContent(
-                "Given a description of a system, and a specific loss of a stakeholder, "
+                "Based on the description of a software system and a function enabled by LLM-powered agents in that software system, "
+                "given a specific stakeholder, and given a specific loss that the stakeholder does not expect from the function, "
                 "identify and list potential system-level states and conditions that could directly lead to this loss under worst-case conditions. "
                 "Provide concise, standalone descriptions of these states and conditions. "
                 "Do not include any cause, explanation, result, or solution to the state or condition. "
@@ -224,8 +241,6 @@ def identify_hazards(
                 "5. State or condition 5\n"
                 "6. State or condition 6\n"
                 "7. State or condition 7\n"
-                "8. State or condition 8\n"
-                "9. State or condition 9\n"
                 "... \n"
                 "... \n"
             ),
@@ -255,6 +270,8 @@ def identify_hazards(
         logging.info(f"Identifying hazards for {item['name']}")
         item["hazards"] = {}
         for j in range(len(item["losses"])):
+            if dropout > 0 and random.random() < dropout:
+                continue
             loss = item["losses"][j]
             substitution_dict["loss"] = loss
             res, meta = chatbot.completions(

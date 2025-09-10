@@ -64,7 +64,9 @@ def main():
 
     # Step 3: Identify losses unless skipped
     if "identify_losses" not in config["skip_steps"]:
-        losses = identify_losses(chatbot, substitution_dict, values)
+        losses = identify_losses(
+            chatbot, substitution_dict, values, dropout=config.get("dropout", 0.0)
+        )
         save_to_json(losses, "losses.json")
         logging.info("Losses saved to losses.json")
         pause_execution()
@@ -74,7 +76,9 @@ def main():
 
     # Step 4: Identify hazards unless skipped
     if "identify_hazards" not in config["skip_steps"]:
-        hazards = identify_hazards(chatbot, substitution_dict, losses)
+        hazards = identify_hazards(
+            chatbot, substitution_dict, losses, dropout=config.get("dropout", 0.0)
+        )
         save_to_json(hazards, "hazards.json")
         logging.info("Hazards saved to hazards.json")
         pause_execution()

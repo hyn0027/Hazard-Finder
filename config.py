@@ -54,12 +54,28 @@ def load_config(file_path="config.yml"):
 
 def system_description(config) -> str:
     """
-    Construct a textual description of the ML system from the configuration.
+    Construct a textual description of the software system from the configuration.
+    """
+    system_aim = config["system"]["system_aim"]
+    use_cases = config["system"]["use_cases"]
+
+    use_cases = [f"- {use_case}" for use_case in use_cases]
+    use_cases = "\n".join(use_cases)
+
+    return (
+        f"The software system is designed to {system_aim}. "
+        f"The system may be used in the following use cases:\n{use_cases} "
+    )
+
+
+def agent_function_description(config) -> str:
+    """
+    Construct a textual description of the agent's function from the configuration.
     """
 
-    system_aim = config["Agent_system"]["system_aim"]
-    use_cases = config["Agent_system"]["use_cases"]
-    tools = config["Agent_system"]["tools"]
+    agent_function_aim = config["agent_function"]["function_aim"]
+    tools = config["agent_function"]["tools"]
+    use_cases = config["agent_function"]["use_cases"]
 
     tool_descriptions = ""
 
@@ -97,7 +113,7 @@ def system_description(config) -> str:
 
     # Return a descriptive summary of the system
     return (
-        f"The agent is used to:\n{system_aim}\n\n"
-        f"Use cases of this agent include:\n{use_cases}\n\n"
-        f"The agent has access to the following tools:\n{tool_descriptions}"
+        f"The agent function is to {agent_function_aim}. "
+        f"The agent may be used in the following use cases:\n{use_cases} "
+        f"The agent can use the following tools:\n{tool_descriptions} "
     )

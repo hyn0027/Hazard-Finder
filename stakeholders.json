@@ -1,118 +1,282 @@
 [
     {
-        "name": "End Users (Developers)",
-        "description": "Individuals who authorize the agent to access Github on their behalf"
+        "name": "Primary End Users",
+        "description": "Individuals who use the agent to view, create, update, and delete their Google Calendar events"
     },
     {
-        "name": "Organization Owners",
-        "description": "Administrators responsible for GitHub organizations whose repos may be managed by the agent"
+        "name": "Event Participants/Attendees",
+        "description": "People invited to events whose data is processed and who receive confirmations"
     },
     {
-        "name": "Repository Maintainers",
-        "description": "People who manage repository health, triage, and merging"
+        "name": "Calendar Owners",
+        "description": "Users whose calendars are being managed directly by the agent"
     },
     {
-        "name": "Collaborators/Contributors",
-        "description": "Users with write access who contribute code and content"
+        "name": "Delegated Calendar Users",
+        "description": "Assistants or colleagues with delegated access who interact with others\u2019 calendars"
     },
     {
-        "name": "Project Managers/Product Owners",
-        "description": "Plan and prioritize work reflected in issues and PRs the agent creates or summarizes"
+        "name": "Team Managers/Project Coordinators",
+        "description": "Users scheduling team meetings and resolving conflicts across multiple calendars"
     },
     {
-        "name": "Security Engineers/Application Security",
-        "description": "Oversee secure coding and secrets hygiene related to agent actions"
+        "name": "Executive Assistants/Schedulers",
+        "description": "Staff who manage executives\u2019 calendars and coordinate complex schedules"
     },
     {
-        "name": "Compliance Officers",
-        "description": "Ensure the agent\u2019s activities comply with internal policies and external standards"
+        "name": "Sales/Customer Success Representatives",
+        "description": "Users scheduling client meetings and follow-ups via the agent"
+    },
+    {
+        "name": "HR/Recruiters",
+        "description": "Users coordinating interviews and candidate meetings using calendar workflows"
+    },
+    {
+        "name": "Event Organizers",
+        "description": "Users planning events requiring invitations, logistics, and confirmations"
+    },
+    {
+        "name": "External Guests/Clients",
+        "description": "Non-organization participants receiving invites and email confirmations"
+    },
+    {
+        "name": "Users with Disabilities",
+        "description": "End users requiring accessible agent interfaces and outputs"
+    },
+    {
+        "name": "International Users",
+        "description": "Users across time zones and locales needing correct date/time and localization handling"
+    },
+    {
+        "name": "Google Calendar API (Google)",
+        "description": "Platform providing calendar data and operations the agent depends on"
+    },
+    {
+        "name": "Google Workspace Administrators",
+        "description": "Domain admins managing API access, OAuth scopes, and security policies"
+    },
+    {
+        "name": "Google Account Owners",
+        "description": "Individuals granting OAuth permissions to the agent for calendar access"
+    },
+    {
+        "name": "Google OAuth/Verification Team",
+        "description": "Google reviewers approving OAuth consent screens and scopes"
+    },
+    {
+        "name": "Email Service Providers (e.g., Gmail/SMTP)",
+        "description": "Services used to send confirmation emails to participants"
+    },
+    {
+        "name": "Email Recipients\u2019 Mail Providers",
+        "description": "External email systems that deliver or filter the agent\u2019s emails"
+    },
+    {
+        "name": "Spam/Abuse Detection Systems",
+        "description": "Filters and systems that may block or flag automated emails"
+    },
+    {
+        "name": "Weather Data Provider",
+        "description": "Third-party service returning weather forecasts for event locations and dates"
+    },
+    {
+        "name": "Video Conferencing Providers (e.g., Zoom/Meet/Teams)",
+        "description": "Services whose links may be embedded in events"
+    },
+    {
+        "name": "Time Zone Database Maintainers (IANA tz)",
+        "description": "Providers of canonical time zone data used for scheduling accuracy"
+    },
+    {
+        "name": "Identity and Access Management (SSO) Providers",
+        "description": "Systems used to authenticate users and manage access to the agent"
+    },
+    {
+        "name": "End-User IT Departments/Helpdesk",
+        "description": "Internal teams supporting configuration, access, and troubleshooting"
+    },
+    {
+        "name": "Customer Support/Service Desk",
+        "description": "Agent operator\u2019s support staff responding to user issues and questions"
+    },
+    {
+        "name": "Technical Writers/Documentation Authors",
+        "description": "People producing user guides, FAQs, and integration docs"
+    },
+    {
+        "name": "Onboarding/Training Teams",
+        "description": "Staff who train users on effective and compliant agent usage"
+    },
+    {
+        "name": "Product Managers",
+        "description": "Owners of roadmap, prioritization, and stakeholder alignment for the agent"
+    },
+    {
+        "name": "UX/UI Designers",
+        "description": "Designers ensuring usability, accessibility, and user satisfaction"
+    },
+    {
+        "name": "Software Engineers/Developers",
+        "description": "Builders of the agent, tools, and integrations with external APIs"
+    },
+    {
+        "name": "QA/Test Engineers",
+        "description": "Testers verifying functionality, reliability, and regression prevention"
+    },
+    {
+        "name": "DevOps/SRE Engineers",
+        "description": "Operators maintaining availability, performance, CI/CD, and incident response"
+    },
+    {
+        "name": "Observability/Monitoring Teams",
+        "description": "Owners of logging, metrics, and alerting for the agent\u2019s services"
+    },
+    {
+        "name": "Data/Analytics Teams",
+        "description": "Analysts using product data to improve features and measure usage"
+    },
+    {
+        "name": "Security/InfoSec Teams",
+        "description": "Stakeholders ensuring secure coding, threat modeling, and vulnerability management"
     },
     {
         "name": "Privacy/Data Protection Officers",
-        "description": "Oversee handling of private repo data and any personal data in issues/PRs"
+        "description": "Owners of compliance with privacy laws and data subject rights"
     },
     {
-        "name": "Risk Management/Governance",
-        "description": "Assess and mitigate operational and technology risks of autonomous changes"
+        "name": "Compliance Officers/Auditors",
+        "description": "Stakeholders ensuring SOC 2, ISO 27001, and similar control adherence"
     },
     {
-        "name": "Open-Source Community Maintainers",
-        "description": "OSS maintainers impacted by agent-authored issues/PRs"
+        "name": "Legal Counsel",
+        "description": "Advisors on contracts, IP, data processing, e-discovery, and liability"
     },
     {
-        "name": "Issue Reporters",
-        "description": "Users who create issues that the agent reads, summarizes, or responds to"
+        "name": "Procurement/Vendor Management",
+        "description": "Teams evaluating and managing contracts with external providers"
     },
     {
-        "name": "Pull Request Authors",
-        "description": "Contributors whose PRs the agent summarizes, reviews, approves, or merges"
+        "name": "Finance/Billing Owners",
+        "description": "Stakeholders overseeing costs for APIs, infrastructure, and subscriptions"
     },
     {
-        "name": "Downstream Dependents",
-        "description": "Projects and services relying on repos the agent modifies"
+        "name": "Risk Management/Insurance Providers",
+        "description": "Entities assessing operational and cyber risk, coverage, and claims"
     },
     {
-        "name": "Upstream Project Maintainers",
-        "description": "Owners of dependencies influenced by agent-proposed fixes or changes"
+        "name": "Incident Response/CSIRT",
+        "description": "Teams handling security incidents, outages, and coordinated communications"
     },
     {
-        "name": "End Users/Customers of the Software",
-        "description": "People using products built from repos affected by agent changes"
+        "name": "Business Continuity/Disaster Recovery Planners",
+        "description": "Stakeholders ensuring resilience and recovery plans"
     },
     {
-        "name": "Data Scientists/ML Engineers (Repo Authors)",
-        "description": "Owners of notebooks/models the agent may run or modify"
+        "name": "Data Governance/Stewards",
+        "description": "Owners of data classification, retention, minimization, and quality"
     },
     {
-        "name": "Students/Educators",
-        "description": "Use the agent for learning and coursework on GitHub repositories"
+        "name": "Backup/Archival Administrators",
+        "description": "Operators of data backup, restore, and retention systems"
     },
     {
-        "name": "GitHub (Platform Provider)",
-        "description": "API and service provider whose policies and availability affect the agent"
+        "name": "Penetration Testers/Security Assessors",
+        "description": "Third parties testing the agent\u2019s security posture"
     },
     {
-        "name": "GitHub Organization Administrators",
-        "description": "Configure permissions, SSO, and app/scopes for agent access"
+        "name": "Accessibility Auditors",
+        "description": "Experts verifying compliance with accessibility standards (e.g., WCAG)"
     },
     {
-        "name": "OAuth/App Authorization Administrators",
-        "description": "Approve scopes and manage tokens used by the agent"
+        "name": "Localization/Internationalization Teams",
+        "description": "Stakeholders managing translations and locale behavior"
     },
     {
-        "name": "Code Sandbox Platform Engineers",
-        "description": "Build and maintain the secure execution environment the agent uses"
+        "name": "Beta Testers/Early Adopters",
+        "description": "Users who trial new features and provide feedback"
     },
     {
-        "name": "Agent Provider",
-        "description": "Develop and operate the GitHub agent platform"
+        "name": "Open-Source Dependency Maintainers",
+        "description": "External maintainers of libraries the agent relies on"
     },
     {
-        "name": "Intellectual Property Rights Holders",
-        "description": "Owners of copyrighted material possibly referenced or modified"
+        "name": "Cloud Infrastructure Providers",
+        "description": "Hosts of the agent\u2019s compute, storage, and networking"
     },
     {
-        "name": "Third-Party Integration Vendors",
-        "description": "Tools connected via webhooks affected by agent commits or PRs"
+        "name": "Logging/Monitoring Vendors",
+        "description": "Third-party platforms for observability, error tracking, and performance"
     },
     {
-        "name": "Package Registry Operators (npm, PyPI, Maven Central)",
-        "description": "Receive and distribute releases produced from repos"
+        "name": "API Quota/Rate-Limit Owners (Google and others)",
+        "description": "Entities controlling API usage limits affecting reliability"
     },
     {
-        "name": "Deployment Platform Owners (Cloud, App Stores)",
-        "description": "Downstream platforms receiving agent-triggered releases"
+        "name": "Standards Bodies (IETF for iCalendar/ICS; email standards)",
+        "description": "Organizations defining protocols the system uses"
     },
     {
-        "name": "Data Subjects in Repos/Issues",
-        "description": "Individuals whose personal data may be present in repository content"
+        "name": "Data Protection Authorities/Regulators (e.g., EU DPAs, FTC, state AGs)",
+        "description": "Regulators enforcing privacy and consumer laws"
     },
     {
-        "name": "Fork Maintainers",
-        "description": "Owners of repository forks where the agent might open PRs or sync changes"
+        "name": "Users\u2019 Works Councils/Employee Representatives",
+        "description": "Bodies consulted for employee-monitoring implications"
     },
     {
-        "name": "License Compliance Analysts",
-        "description": "Track third-party license obligations in code authored or modified by the agent"
+        "name": "E-Discovery/Legal Hold Stakeholders",
+        "description": "Teams ensuring preservation and retrieval of records when required"
+    },
+    {
+        "name": "App Distribution Gatekeepers (e.g., Google Workspace Marketplace)",
+        "description": "Reviewers approving marketplace listings"
+    },
+    {
+        "name": "Ethics/AI Governance Boards",
+        "description": "Stakeholders overseeing responsible AI behavior and policy compliance"
+    },
+    {
+        "name": "Competitors/Market Analysts",
+        "description": "External forces influencing requirements, differentiation, and roadmap"
+    },
+    {
+        "name": "Environmental Stakeholders (Data Center Impact)",
+        "description": "Entities concerned with the environmental footprint of hosting"
+    },
+    {
+        "name": "Community/Advocacy Groups for Privacy and Accessibility",
+        "description": "External voices influencing best practices and expectations"
+    },
+    {
+        "name": "Participants\u2019 Organizations/IT Policies",
+        "description": "Companies whose employees are invited and whose policies affect delivery"
+    },
+    {
+        "name": "Anti-Abuse/Fraud Prevention Teams",
+        "description": "Stakeholders monitoring misuse, spam, and policy violations"
+    },
+    {
+        "name": "End-User Families/Personal Contacts (indirect)",
+        "description": "Individuals indirectly impacted by personal events and communications"
+    },
+    {
+        "name": "Change Advisory Boards (Enterprise)",
+        "description": "Committees approving production changes in controlled environments"
+    },
+    {
+        "name": "Data Subjects (Participants\u2019 Personal Data)",
+        "description": "Individuals whose names/emails are processed by the agent"
+    },
+    {
+        "name": "Subpoena/Legal Request Responders",
+        "description": "Teams handling lawful requests for logs or communications"
+    },
+    {
+        "name": "Quality Management/Process Owners",
+        "description": "Stakeholders governing SDLC and continuous improvement"
+    },
+    {
+        "name": "Training Dataset/Model Providers (for the agent)",
+        "description": "Vendors supplying models or data powering recommendations"
     }
 ]
