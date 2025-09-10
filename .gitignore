@@ -200,6 +200,7 @@ toysys/
 .DS_Store
 
 *.json
+*.log
 # 
 */config.yml
 
