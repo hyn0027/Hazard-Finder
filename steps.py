@@ -33,7 +33,6 @@ def identify_stakeholders(
                 "Based on the description of a software system and a function enabled by LLM-powered agents in that software system, "
                 "identify and list all potential stakeholders related to the function, both direct and indirect. "
                 "Consider any individuals, groups, sub-populations, organizations, or entities that may develop, use, maintain, support, be affected by, or influence the function in any way. "
-                "Think expansively across all possible domains to ensure a comprehensive stakeholder list. "
                 "Format your response as follows:\n"
                 "1. Stakeholder Name - Short definition of the stakeholder\n"
                 "2. Stakeholder Name - Short definition of the stakeholder\n"
@@ -87,6 +86,7 @@ def identify_values(
     chatbot: ChatCompletionEndPoint,
     substitution_dict: SubstitutionDict,
     stakeholders: list,
+    dropout: float = 0.0,
 ):
     message_list = MessageList()
 
@@ -130,6 +130,8 @@ def identify_values(
 
     # Iterate through each stakeholder to get their associated values/goals
     for i in range(len(stakeholders)):
+        if dropout > 0 and random.random() < dropout and i > 5:
+            continue
         item = stakeholders[i]
         substitution_dict["stakeholder"] = f"{item['name']} - {item['description']}"
         res, meta = chatbot.completions(
@@ -139,7 +141,9 @@ def identify_values(
         values_content: TextContent = res[0][0]
         value = values_content.split_ordered_list()
         value = [val.strip() for val in value]
-        logging.info(f"Values and Goals for {item['name']}:")
+        logging.info(
+            f"Values and Goals for {item['name']} ({i + 1}/{len(stakeholders)}):"
+        )
         for val in value:
             logging.info(f"\t- {val}")
         logging.info(f"{'*' * 5}")
@@ -190,14 +194,22 @@ def identify_losses(
         )
     )
 
+    total_num = sum(len(item["values"]) if "values" in item else 0 for item in values)
+    cnt_num = 0
+
     # Loop through values and convert each into a potential loss
     for i in range(len(values)):
         item = values[i]
         substitution_dict["stakeholder"] = f"{item['name']} - {item['description']}"
         logging.info(f"Identifying losses for {item['name']}")
+        if "values" not in item or len(item["values"]) == 0:
+            logging.info(f"No values for {item['name']}, skipping...")
+            continue
         for val in item["values"]:
+            cnt_num += 1
             if dropout > 0 and random.random() < dropout:
                 continue
+            logging.info(f"({cnt_num}/{total_num}) Value: {val}")
             substitution_dict["value"] = val
             res, meta = chatbot.completions(
                 message_list,
@@ -205,7 +217,7 @@ def identify_losses(
             )
             loss_content: TextContent = res[0][0]
             loss = loss_content.text.strip()
-            logging.info(f"\tLoss for {val} is: {loss}")
+            logging.info(f"\tLoss: {loss}")
             if "losses" not in item:
                 item["losses"] = []
             item["losses"].append(loss)
@@ -263,15 +275,23 @@ def identify_hazards(
         )
     )
 
+    total_num = sum(len(item["losses"]) if "losses" in item else 0 for item in losses)
+    cnt_num = 0
+
     # Loop over each loss and collect hazards
     for i in range(len(losses)):
         item = losses[i]
         substitution_dict["stakeholder"] = f"{item['name']} - {item['description']}"
         logging.info(f"Identifying hazards for {item['name']}")
         item["hazards"] = {}
+        if "losses" not in item or len(item["losses"]) == 0:
+            logging.info(f"No losses for {item['name']}, skipping...")
+            continue
         for j in range(len(item["losses"])):
+            cnt_num += 1
             if dropout > 0 and random.random() < dropout:
                 continue
+            logging.info(f"({cnt_num}/{total_num}) Loss: {item['losses'][j]}")
             loss = item["losses"][j]
             substitution_dict["loss"] = loss
             res, meta = chatbot.completions(

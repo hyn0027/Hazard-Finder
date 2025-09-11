@@ -2,7 +2,7 @@ from OpenAIChatHelper import ChatCompletionEndPoint
 from OpenAIChatHelper.message import (
     SubstitutionDict,
 )
-from config import load_config, system_description
+from config import load_config, system_description, agent_function_description
 from steps import (
     identify_stakeholders,
     identify_values,
@@ -34,8 +34,11 @@ def main():
 
     # Generate and log system description, and store in the substitution dictionary
     system_description_message = system_description(config)
+    agent_function = agent_function_description(config)
     logging.info(f"System description: {system_description_message}")
+    logging.info(f"Agent function description: {agent_function}")
     substitution_dict["system_description"] = system_description_message
+    substitution_dict["agent_function"] = agent_function
     pause_execution()
 
     # Step 1: Identify stakeholders unless skipped via config
@@ -54,7 +57,9 @@ def main():
 
     # Step 2: Identify values unless skipped
     if "identify_values" not in config["skip_steps"]:
-        values = identify_values(chatbot, substitution_dict, stakeholders)
+        values = identify_values(
+            chatbot, substitution_dict, stakeholders, dropout=config.get("dropout", 0.0)
+        )
         save_to_json(values, "values.json")
         logging.info("Values saved to values.json")
         pause_execution()

@@ -104,16 +104,17 @@ def agent_function_description(config) -> str:
             f"Tool: {tool_name}\n"
             f"Description: {tool_description}\n"
             f"Parameters:\n{parameters}\n"
-            f"Response:\n{response}\n\n"
+            f"Response:\n{response}\n"
+            "\n"
         )
 
     # Format use cases as a bullet-point list
-    use_cases = [f"- {use_case}" for use_case in use_cases]
+    use_cases = [f"- {use_case.strip()}" for use_case in use_cases]
     use_cases = "\n".join(use_cases)
 
     # Return a descriptive summary of the system
     return (
         f"The agent function is to {agent_function_aim}. "
-        f"The agent may be used in the following use cases:\n{use_cases} "
+        f"The agent may be used in the following use cases:\n{use_cases}\n\n"
         f"The agent can use the following tools:\n{tool_descriptions} "
     )
