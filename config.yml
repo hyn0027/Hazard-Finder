@@ -2,41 +2,41 @@ chatbot:
   model: "gpt-5"
 
 system:
-  system_aim: "aim of the software system"
+  system_aim: "A blogging platform that enable authors to create, edit, and publish articles, and readers to browse and read them."
   use_cases:
-    - "Use case 1"
-    - "Use case 2"
-    - "Use case 3"
+    - "A user publishes articles on the platform"
+    - "A user reads articles on the platform"
+    - "A user comments on articles"
+    - "A user likes or shares articles"
+    - "A user follows other authors"
 
 agent_function:
-  function_aim: "aim of the agent function"
+  function_aim: "Takes article title and content as input, help authors format their content, find a cover image, and publish the article."
   tools:
-    - name: "name_of_tool_1"
-      description: "description_of_tool_1"
+    - name: "search_image"
+      description: "Search an image from the web based on a given query."
       parameters:
-        - name: "param_1"
-          description: "description_of_param_1"
-        - name: "param_2"
-          description: "description_of_param_2"
+        - name: "query"
+          description: "The search query to find relevant images"
       response:
-        - name: "result_1"
-          description: "description_of_result_1"
-    - name: "name_of_tool_2"
-      description: "description_of_tool_2"
+        - name: "image_url"
+          description: "The URL of the most relevant image found"
+    - name: "publish_article"
+      description: "Publish the article on the blogging platform."
       parameters:
-        - name: "param_1"
-          description: "description_of_param_1"
+        - name: "title"
+          description: "The title of the article"
+        - name: "content"
+          description: "The content of the article in markdown format"
+        - name: "cover_image_url"
+          description: "The URL of the cover image for the article"
       response:
-        - name: "result_1"
-          description: "description_of_result_1"
-        - name: "result_2"
-          description: "description_of_result_2"
+        - name: "article_url"
+          description: "The URL of the published article"
 
   use_cases:
-    - "use_cases_of_the_agent_function_1"
-    - "use_cases_of_the_agent_function_2"
-    - "use_cases_of_the_agent_function_3"
+    - "An author provides an article title and content, and the agent helps format it, find a cover image, and publish it."
 
 checkpoint: None
 
-dropout: 0.7
+dropout: 0.8

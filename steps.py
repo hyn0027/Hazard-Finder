@@ -30,18 +30,15 @@ def identify_stakeholders(
         DevSysUserMessage(
             "system",
             TextContent(
-                "Based on the description of a software system and a function enabled by LLM-powered agents in that software system, "
+                "Based on the description of a software system and a specific function within that system that is enabled by LLM-powered agents, "
                 "identify and list all potential stakeholders related to the function, both direct and indirect. "
-                "Consider any individuals, groups, sub-populations, organizations, or entities that may develop, use, maintain, support, be affected by, or influence the function in any way. "
+                "Stakeholders may include those who develop, use, maintain, support, are affected by, or influence the function in any way.\n\n"
                 "Format your response as follows:\n"
-                "1. Stakeholder Name - Short definition of the stakeholder\n"
-                "2. Stakeholder Name - Short definition of the stakeholder\n"
-                "3. Stakeholder Name - Short definition of the stakeholder\n"
-                "4. Stakeholder Name - Short definition of the stakeholder\n"
-                "5. Stakeholder Name - Short definition of the stakeholder\n"
-                "6. Stakeholder Name - Short definition of the stakeholder\n"
-                "7. Stakeholder Name - Short definition of the stakeholder\n"
-                "...\n"
+                "1. Stakeholder Name - Short description of the stakeholder and how they are related to the function\n"
+                "2. Stakeholder Name - Short description of the stakeholder and how they are related to the function\n"
+                "3. Stakeholder Name - Short description of the stakeholder and how they are related to the function\n"
+                "4. Stakeholder Name - Short description of the stakeholder and how they are related to the function\n"
+                "5. Stakeholder Name - Short description of the stakeholder and how they are related to the function\n"
                 "...\n"
             ),
         )
@@ -95,18 +92,15 @@ def identify_values(
         DevSysUserMessage(
             "system",
             TextContent(
-                "Based on the description of a software system and a function enabled by LLM-powered agents in that software system, "
-                "given a specific stakeholder, "
-                "identify the high-level, fundamental values and goals that the stakeholder may expect from the function. "
+                "Based on the description of a software system and a specific function within that system that is enabled by LLM-powered agents, "
+                "and considering a particular stakeholder associated with that function, "
+                "identify the core abstract values that the stakeholder expects from the function.\n"
                 "Format your response as follows:\n"
-                "1. A Short phrase describing value or goal 1\n"
-                "2. A Short phrase describing value or goal 2\n"
-                "3. A Short phrase describing value or goal 3\n"
-                "4. A Short phrase describing value or goal 4\n"
-                "5. A Short phrase describing value or goal 5\n"
-                "6. A Short phrase describing value or goal 6\n"
-                "7. A Short phrase describing value or goal 7\n"
-                "... \n"
+                "1. A Short phrase describing value 1\n"
+                "2. A Short phrase describing value 2\n"
+                "3. A Short phrase describing value 3\n"
+                "4. A Short phrase describing value 4\n"
+                "5. A Short phrase describing value 5\n"
                 "... \n"
             ),
         )
@@ -166,10 +160,10 @@ def identify_losses(
         DevSysUserMessage(
             "system",
             TextContent(
-                "Based on the description of a software system and a function enabled by LLM-powered agents in that software system, "
-                "given a specific stakeholder, "
-                "and given a high-level value or goal that the stakeholder may expect from the function, "
-                "reverse the value or goal into a corresponding high-level loss. "
+                "Based on the description of a software system and a specific function within that system that is enabled by LLM-powered agents, "
+                "and considering a particular stakeholder associated with that function, "
+                "take a core abstract value that the stakeholder expects from the function "
+                "and reverse it into the corresponding core abstract loss. "
                 "Format your response as follows:\n"
                 "A Short phrase describing the loss"
             ),
@@ -240,9 +234,10 @@ def identify_hazards(
         DevSysUserMessage(
             "system",
             TextContent(
-                "Based on the description of a software system and a function enabled by LLM-powered agents in that software system, "
+                "Based on the description of a software system and a specific function within that system that is enabled by LLM-powered agents, "
                 "given a specific stakeholder, and given a specific loss that the stakeholder does not expect from the function, "
-                "identify and list potential system-level states and conditions that could directly lead to this loss under worst-case conditions. "
+                "focusing what the agent function can do,"
+                "identify and list potential states and conditions of the agent function that could directly lead to this loss under worst-case conditions. "
                 "Provide concise, standalone descriptions of these states and conditions. "
                 "Do not include any cause, explanation, result, or solution to the state or condition. "
                 "Format your response as follows:\n"
@@ -251,8 +246,6 @@ def identify_hazards(
                 "3. State or condition 3\n"
                 "4. State or condition 4\n"
                 "5. State or condition 5\n"
-                "6. State or condition 6\n"
-                "7. State or condition 7\n"
                 "... \n"
                 "... \n"
             ),
@@ -264,8 +257,10 @@ def identify_hazards(
         DevSysUserMessage(
             "user",
             TextContent(
-                "System Description:\n"
+                "Software System Description: \n"
                 "{system_description}\n\n"
+                "Agent Function Description: \n"
+                "{agent_function}\n\n"
                 "Stakeholder:\n"
                 "{stakeholder}\n\n"
                 "Loss:\n"
