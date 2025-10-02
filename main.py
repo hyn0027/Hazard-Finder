@@ -13,6 +13,8 @@ from steps import (
 )
 from utils import pause_execution, save_to_json, load_from_json
 import logging
+from filter import filter_value, filter_loss
+import asyncio
 
 # Configure logging format and level
 logging.basicConfig(
@@ -22,7 +24,7 @@ logging.basicConfig(
 )
 
 
-def main():
+async def main():
     # Load configuration settings
     config = load_config()
 
@@ -55,9 +57,8 @@ def main():
         stakeholders = load_from_json("stakeholders.json")
         logging.info("Stakeholders loaded from stakeholders.json")
 
-    # Step 2: Identify values unless skipped
     if "identify_values" not in config["skip_steps"]:
-        values = identify_values(
+        values = await identify_values(
             chatbot, substitution_dict, stakeholders, dropout=config.get("dropout", 0.0)
         )
         save_to_json(values, "values.json")
@@ -67,9 +68,19 @@ def main():
         values = load_from_json("values.json")
         logging.info("Values loaded from values.json")
 
-    # Step 3: Identify losses unless skipped
+    if "filter_values" not in config["skip_steps"]:
+        values = await filter_value(
+            chatbot, substitution_dict, values, dropout=config.get("dropout", 0.0)
+        )
+        save_to_json(values, "filtered_values.json")
+        logging.info("Filtered values saved to filtered_values.json")
+        pause_execution()
+    else:
+        values = load_from_json("filtered_values.json")
+        logging.info("Filtered values loaded from filtered_values.json")
+
     if "identify_losses" not in config["skip_steps"]:
-        losses = identify_losses(
+        losses = await identify_losses(
             chatbot, substitution_dict, values, dropout=config.get("dropout", 0.0)
         )
         save_to_json(losses, "losses.json")
@@ -79,9 +90,17 @@ def main():
         losses = load_from_json("losses.json")
         logging.info("Losses loaded from losses.json")
 
-    # Step 4: Identify hazards unless skipped
+    if "filter_losses" not in config["skip_steps"]:
+        losses = await filter_loss(chatbot, substitution_dict, losses)
+        save_to_json(losses, "filtered_losses.json")
+        logging.info("Filtered losses saved to filtered_losses.json")
+        pause_execution()
+    else:
+        losses = load_from_json("filtered_losses.json")
+        logging.info("Filtered losses loaded from filtered_losses.json")
+
     if "identify_hazards" not in config["skip_steps"]:
-        hazards = identify_hazards(
+        hazards = await identify_hazards(
             chatbot, substitution_dict, losses, dropout=config.get("dropout", 0.0)
         )
         save_to_json(hazards, "hazards.json")
@@ -154,4 +173,4 @@ def main():
 
 # Entry point for the script
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

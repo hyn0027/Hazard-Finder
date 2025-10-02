@@ -37,6 +37,6 @@ agent_function:
   use_cases:
     - "An author provides an article title and content, and the agent helps format it, find a cover image, and publish it."
 
-checkpoint: None
+checkpoint: "identify_losses"
 
-dropout: 0.8
+dropout: 0

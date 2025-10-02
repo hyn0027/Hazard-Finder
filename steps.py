@@ -10,6 +10,8 @@ import numpy as np
 from sklearn.cluster import KMeans
 import logging
 import random
+import asyncio
+from copy import deepcopy
 
 # Configure basic logging
 logging.basicConfig(
@@ -32,7 +34,8 @@ def identify_stakeholders(
             TextContent(
                 "Based on the description of a software system and a specific function within that system that is enabled by LLM-powered agents, "
                 "identify and list all potential stakeholders related to the function, both direct and indirect. "
-                "Stakeholders may include those who develop, use, maintain, support, are affected by, or influence the function in any way.\n\n"
+                "Stakeholders may include those who develop, use, maintain, support, are affected by, or influence the function in any way. "
+                "The stakeholders should be related to the agentic function, rather than the overall system. \n\n"
                 "Format your response as follows:\n"
                 "1. Stakeholder Name - Short description of the stakeholder and how they are related to the function\n"
                 "2. Stakeholder Name - Short description of the stakeholder and how they are related to the function\n"
@@ -79,7 +82,7 @@ def identify_stakeholders(
 
 
 # Identify values for each stakeholder using the chatbot
-def identify_values(
+async def identify_values(
     chatbot: ChatCompletionEndPoint,
     substitution_dict: SubstitutionDict,
     stakeholders: list,
@@ -92,9 +95,12 @@ def identify_values(
         DevSysUserMessage(
             "system",
             TextContent(
-                "Based on the description of a software system and a specific function within that system that is enabled by LLM-powered agents, "
+                "Based on the description of a software system and a specific function within the system that is enabled by LLM-powered agents, "
                 "and considering a particular stakeholder associated with that function, "
-                "identify the core abstract values that the stakeholder expects from the function.\n"
+                "identify the core high-level, abstract values that the stakeholder expects from the function. "
+                "Each value should focus on a single topic and avoid combining multiple aspects. "
+                "The values should be related to the agent function, rather than the overall system. "
+                "\n\n"
                 "Format your response as follows:\n"
                 "1. A Short phrase describing value 1\n"
                 "2. A Short phrase describing value 2\n"
@@ -122,32 +128,52 @@ def identify_values(
         )
     )
 
-    # Iterate through each stakeholder to get their associated values/goals
-    for i in range(len(stakeholders)):
-        if dropout > 0 and random.random() < dropout and i > 5:
-            continue
-        item = stakeholders[i]
-        substitution_dict["stakeholder"] = f"{item['name']} - {item['description']}"
-        res, meta = chatbot.completions(
-            message_list,
-            substitution_dict=substitution_dict,
-        )
-        values_content: TextContent = res[0][0]
-        value = values_content.split_ordered_list()
-        value = [val.strip() for val in value]
-        logging.info(
-            f"Values and Goals for {item['name']} ({i + 1}/{len(stakeholders)}):"
-        )
-        for val in value:
-            logging.info(f"\t- {val}")
-        logging.info(f"{'*' * 5}")
-        stakeholders[i]["values"] = value
+    semaphore = asyncio.Semaphore(100)
 
+    async def fetch_values(
+        i, item, message_list, substitution_dict, chatbot: ChatCompletionEndPoint
+    ):
+        if dropout > 0 and random.random() < dropout and i > 5:
+            return None
+        async with semaphore:
+            substitution_dict["stakeholder"] = f"{item['name']} - {item['description']}"
+            res, meta = await chatbot.completions(
+                message_list,
+                substitution_dict=substitution_dict,
+            )
+
+            values_content: TextContent = res[0][0]
+            value = values_content.split_ordered_list()
+            value = [val.strip() for val in value]
+            log_msg = (
+                f"Values and Goals for {item['name']} ({i + 1}/{len(stakeholders)}):\n"
+                + "\n".join([f"\t- {val}" for val in value])
+                + f"\n{'*' * 5}"
+            )
+            logging.info(log_msg)
+            item["values"] = value
+            return item
+
+    tasks = []
+    for i, item in enumerate(stakeholders):
+        tasks.append(
+            asyncio.create_task(
+                fetch_values(
+                    i,
+                    item,
+                    deepcopy(message_list),
+                    deepcopy(substitution_dict),
+                    chatbot,
+                )
+            )
+        )
+    results = await asyncio.gather(*tasks)
+    stakeholders = [res for res in results if res is not None]
     return stakeholders
 
 
 # Identify potential losses from values using chatbot
-def identify_losses(
+async def identify_losses(
     chatbot: ChatCompletionEndPoint,
     substitution_dict: SubstitutionDict,
     values: list,
@@ -162,7 +188,7 @@ def identify_losses(
             TextContent(
                 "Based on the description of a software system and a specific function within that system that is enabled by LLM-powered agents, "
                 "and considering a particular stakeholder associated with that function, "
-                "take a core abstract value that the stakeholder expects from the function "
+                "take a core abstract value that the stakeholder expects from the function, "
                 "and reverse it into the corresponding core abstract loss. "
                 "Format your response as follows:\n"
                 "A Short phrase describing the loss"
@@ -191,37 +217,88 @@ def identify_losses(
     total_num = sum(len(item["values"]) if "values" in item else 0 for item in values)
     cnt_num = 0
 
-    # Loop through values and convert each into a potential loss
-    for i in range(len(values)):
-        item = values[i]
-        substitution_dict["stakeholder"] = f"{item['name']} - {item['description']}"
-        logging.info(f"Identifying losses for {item['name']}")
-        if "values" not in item or len(item["values"]) == 0:
-            logging.info(f"No values for {item['name']}, skipping...")
-            continue
-        for val in item["values"]:
-            cnt_num += 1
-            if dropout > 0 and random.random() < dropout:
-                continue
-            logging.info(f"({cnt_num}/{total_num}) Value: {val}")
-            substitution_dict["value"] = val
-            res, meta = chatbot.completions(
+    semaphore = asyncio.Semaphore(100)
+
+    async def fetch_losses(
+        i, j, id, item, value, message_list, substitution_dict, chatbot
+    ):
+        if dropout > 0 and random.random() < dropout and id > 5:
+            return None
+        async with semaphore:
+            substitution_dict["stakeholder"] = f"{item['name']} - {item['description']}"
+            substitution_dict["value"] = value
+            res, meta = await chatbot.completions(
                 message_list,
                 substitution_dict=substitution_dict,
             )
             loss_content: TextContent = res[0][0]
             loss = loss_content.text.strip()
-            logging.info(f"\tLoss: {loss}")
-            if "losses" not in item:
-                item["losses"] = []
-            item["losses"].append(loss)
-        logging.info(f"{'*' * 5}")
-        values[i] = item
+            logging.info(f"({id}/{total_num}) Value: {value}\n\tLoss: {loss}")
+            return (i, loss)
+
+    tasks = []
+    cnt_num = 0
+
+    for i, item in enumerate(values):
+        for j, val in enumerate(item.get("values", [])):
+            cnt_num += 1
+            tasks.append(
+                asyncio.create_task(
+                    fetch_losses(
+                        i,
+                        j,
+                        cnt_num,
+                        item,
+                        val,
+                        deepcopy(message_list),
+                        deepcopy(substitution_dict),
+                        chatbot,
+                    )
+                )
+            )
+
+    results = await asyncio.gather(*tasks)
+
+    for res in results:
+        if res is not None:
+            i, loss = res
+            if "losses" not in values[i]:
+                values[i]["losses"] = []
+            values[i]["losses"].append(loss)
+
     return values
+
+    # # Loop through values and convert each into a potential loss
+    # for i in range(len(values)):
+    #     item = values[i]
+    #     substitution_dict["stakeholder"] = f"{item['name']} - {item['description']}"
+    #     logging.info(f"Identifying losses for {item['name']}")
+    #     if "values" not in item or len(item["values"]) == 0:
+    #         logging.info(f"No values for {item['name']}, skipping...")
+    #         continue
+    #     for val in item["values"]:
+    #         cnt_num += 1
+    #         if dropout > 0 and random.random() < dropout:
+    #             continue
+    #         logging.info(f"({cnt_num}/{total_num}) Value: {val}")
+    #         substitution_dict["value"] = val
+    #         res, meta = chatbot.completions(
+    #             message_list,
+    #             substitution_dict=substitution_dict,
+    #         )
+    #         loss_content: TextContent = res[0][0]
+    #         loss = loss_content.text.strip()
+    #         logging.info(f"\tLoss: {loss}")
+    #         if "losses" not in item:
+    #             item["losses"] = []
+    #         item["losses"].append(loss)
+    #     logging.info(f"{'*' * 5}")
+    #     values[i] = item
+    # return values
 
 
 # Identify hazards that could lead to each loss
-def identify_hazards(
+async def identify_hazards(
     chatbot: ChatCompletionEndPoint,
     substitution_dict: SubstitutionDict,
     losses: list,
@@ -271,38 +348,92 @@ def identify_hazards(
     )
 
     total_num = sum(len(item["losses"]) if "losses" in item else 0 for item in losses)
+    logging.info(f"Total number of losses to process: {total_num}")
     cnt_num = 0
 
-    # Loop over each loss and collect hazards
-    for i in range(len(losses)):
-        item = losses[i]
-        substitution_dict["stakeholder"] = f"{item['name']} - {item['description']}"
-        logging.info(f"Identifying hazards for {item['name']}")
-        item["hazards"] = {}
-        if "losses" not in item or len(item["losses"]) == 0:
-            logging.info(f"No losses for {item['name']}, skipping...")
-            continue
-        for j in range(len(item["losses"])):
-            cnt_num += 1
-            if dropout > 0 and random.random() < dropout:
-                continue
-            logging.info(f"({cnt_num}/{total_num}) Loss: {item['losses'][j]}")
-            loss = item["losses"][j]
+    semaphore = asyncio.Semaphore(100)
+
+    async def fetch_hazards(
+        i, j, id, item, loss, message_list, substitution_dict, chatbot
+    ):
+        if dropout > 0 and random.random() < dropout and id > 5:
+            return None
+        async with semaphore:
+            substitution_dict["stakeholder"] = f"{item['name']} - {item['description']}"
             substitution_dict["loss"] = loss
-            res, meta = chatbot.completions(
+            res, meta = await chatbot.completions(
                 message_list,
                 substitution_dict=substitution_dict,
             )
             hazard_content: TextContent = res[0][0]
             hazard = hazard_content.split_ordered_list()
             hazard = [h.strip() for h in hazard]
-            logging.info(f"Hazards for {loss}:")
-            for h in hazard:
-                logging.info(f"\t- {h}")
-            logging.info(f"{'*' * 5}")
-            item["hazards"][loss] = hazard
-        losses[i] = item
+            log_msg = (
+                f"Hazards for {item['name']} - Loss: {loss} ({id}/{total_num}):\n"
+                + "\n".join([f"\t- {h}" for h in hazard])
+                + f"\n{'*' * 5}"
+            )
+            logging.info(log_msg)
+            return (i, loss, hazard)
+
+    tasks = []
+    cnt_num = 0
+    for i, item in enumerate(losses):
+        for j, loss in enumerate(item.get("losses", [])):
+            cnt_num += 1
+            tasks.append(
+                asyncio.create_task(
+                    fetch_hazards(
+                        i,
+                        j,
+                        cnt_num,
+                        item,
+                        loss,
+                        deepcopy(message_list),
+                        deepcopy(substitution_dict),
+                        chatbot,
+                    )
+                )
+            )
+    results = await asyncio.gather(*tasks)
+    for res in results:
+        if res is not None:
+            i, loss, hazard = res
+            if "hazards" not in losses[i]:
+                losses[i]["hazards"] = {}
+            losses[i]["hazards"][loss] = hazard
     return losses
+
+    # # Loop over each loss and collect hazards
+    # for i in range(len(losses)):
+    #     item = losses[i]
+    #     substitution_dict["stakeholder"] = f"{item['name']} - {item['description']}"
+    #     logging.info(f"Identifying hazards for {item['name']}")
+    #     item["hazards"] = {}
+    #     if "losses" not in item or len(item["losses"]) == 0:
+    #         logging.info(f"No losses for {item['name']}, skipping...")
+    #         continue
+    #     for j in range(len(item["losses"])):
+    #         cnt_num += 1
+    #         if dropout > 0 and random.random() < dropout:
+    #             continue
+    #         logging.info(f"({cnt_num}/{total_num}) Loss: {item['losses'][j]}")
+    #         loss = item["losses"][j]
+    #         substitution_dict["loss"] = loss
+    #         res, meta = chatbot.completions(
+    #             message_list,
+    #             substitution_dict=substitution_dict,
+    #         )
+    #         hazard_content: TextContent = res[0][0]
+    #         hazard = hazard_content.split_ordered_list()
+    #         hazard = [h.strip() for h in hazard]
+    #         logging.info(f"Hazards for {loss}:")
+    #         for h in hazard:
+    #             logging.info(f"\t- {h}")
+    #         logging.info(f"{'*' * 5}")
+    #         item["hazards"][loss] = hazard
+    #     losses[i] = item
+    # return losses
 
 
 # Consolidate all hazard statements by clustering and summarizing them

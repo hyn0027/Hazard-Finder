@@ -12,7 +12,9 @@ logging.basicConfig(
 STEP_ORDER = [
     "identify_stakeholders",
     "identify_values",
+    "filter_values",
     "identify_losses",
+    "filter_losses",
     "identify_hazards",
     "consolidate_hazards",
     "divide_and_consolidate1",
