@@ -45,7 +45,7 @@ async def main():
 
     # Step 1: Identify stakeholders unless skipped via config
     if "identify_stakeholders" not in config["skip_steps"]:
-        stakeholders = identify_stakeholders(chatbot, substitution_dict)
+        stakeholders = await identify_stakeholders(chatbot, substitution_dict)
         for stakeholder in stakeholders:
             logging.info(
                 f"Stakeholder: {stakeholder['name']} - {stakeholder['description']}"

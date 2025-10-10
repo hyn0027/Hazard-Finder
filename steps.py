@@ -22,7 +22,7 @@ logging.basicConfig(
 
 
 # Identify stakeholders using chatbot, based on the system description
-def identify_stakeholders(
+async def identify_stakeholders(
     chatbot: ChatCompletionEndPoint, substitution_dict: SubstitutionDict
 ):
     message_list = MessageList()
@@ -62,7 +62,7 @@ def identify_stakeholders(
     )
 
     # Get chatbot response
-    res, meta = chatbot.completions(
+    res, meta = await chatbot.completions(
         message_list,
         substitution_dict=substitution_dict,
     )

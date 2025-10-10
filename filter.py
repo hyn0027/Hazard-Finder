@@ -259,7 +259,9 @@ async def filter_loss(
             loss_list[i]["losses"] = loss_list[i]["filtered_losses"]
             del loss_list[i]["filtered_losses"]
         else:
-            loss_list[i]["original_losses"] = loss_list[i]["losses"]
+            loss_list[i]["original_losses"] = (
+                loss_list[i]["losses"] if "losses" in loss_list[i] else []
+            )
             loss_list[i]["losses"] = []
     return loss_list
 

@@ -13,14 +13,36 @@ system:
 agent_function:
   function_aim: "Takes article title and content as input, help authors format their content, find a cover image, and publish the article."
   tools:
-    - name: "search_image"
-      description: "Search an image from the web based on a given query."
+    - name: "fetch_image_API1"
+      description: "Fetch a list of image from ImageAPI1 based on a given query."
       parameters:
         - name: "query"
           description: "The search query to find relevant images"
       response:
-        - name: "image_url"
-          description: "The URL of the most relevant image found"
+        - name: "image_urls"
+          description: "A list of URLs of relevant images found"
+        - name: "copyright_info"
+          description: 'A list of copyright information for each image; a copyright information for an image can be a specific license, "public domain", "full copyright", "unknown", or other similar terms'
+    - name: "fetch_image_API2"
+      description: "Fetch a list of image from ImageAPI2 based on a given query."
+      parameters:
+        - name: "query"
+          description: "The search query to find relevant images"
+      response:
+        - name: "image_urls"
+          description: "A list of URLs of relevant images found"
+        - name: "copyright_info"
+          description: 'A list of copyright information for each image; a copyright information for an image can be a specific license, "public domain", "full copyright", "unknown", or other similar terms'
+    - name: "assess_images"
+      description: "Using a VLM to assess a list of image URLs and return the most suitable one for a description."
+      parameters:
+        - name: "image_urls"
+          description: "A list of image URLs to assess"
+        - name: "description"
+          description: "The description of the article to match the images against"
+      response:
+        - name: "best_image_url"
+          description: "The URL of the most suitable image for the article"
     - name: "publish_article"
       description: "Publish the article on the blogging platform."
       parameters:
@@ -37,6 +59,6 @@ agent_function:
   use_cases:
     - "An author provides an article title and content, and the agent helps format it, find a cover image, and publish it."
 
-checkpoint: "identify_losses"
+checkpoint: "identify_hazards"
 
 dropout: 0
