@@ -2,63 +2,41 @@ chatbot:
   model: "gpt-5"
 
 system:
-  system_aim: "A blogging platform that enable authors to create, edit, and publish articles, and readers to browse and read them."
+  system_aim: "aim of the software system"
   use_cases:
-    - "A user publishes articles on the platform"
-    - "A user reads articles on the platform"
-    - "A user comments on articles"
-    - "A user likes or shares articles"
-    - "A user follows other authors"
+    - "Use case 1"
+    - "Use case 2"
+    - "Use case 3"
 
 agent_function:
-  function_aim: "Takes article title and content as input, help authors format their content, find a cover image, and publish the article."
+  function_aim: "aim of the agent function"
   tools:
-    - name: "fetch_image_API1"
-      description: "Fetch a list of image from ImageAPI1 based on a given query."
+    - name: "name_of_tool_1"
+      description: "description_of_tool_1"
       parameters:
-        - name: "query"
-          description: "The search query to find relevant images"
+        - name: "param_1"
+          description: "description_of_param_1"
+        - name: "param_2"
+          description: "description_of_param_2"
       response:
-        - name: "image_urls"
-          description: "A list of URLs of relevant images found"
-        - name: "copyright_info"
-          description: 'A list of copyright information for each image; a copyright information for an image can be a specific license, "public domain", "full copyright", "unknown", or other similar terms'
-    - name: "fetch_image_API2"
-      description: "Fetch a list of image from ImageAPI2 based on a given query."
+        - name: "result_1"
+          description: "description_of_result_1"
+    - name: "name_of_tool_2"
+      description: "description_of_tool_2"
       parameters:
-        - name: "query"
-          description: "The search query to find relevant images"
+        - name: "param_1"
+          description: "description_of_param_1"
       response:
-        - name: "image_urls"
-          description: "A list of URLs of relevant images found"
-        - name: "copyright_info"
-          description: 'A list of copyright information for each image; a copyright information for an image can be a specific license, "public domain", "full copyright", "unknown", or other similar terms'
-    - name: "assess_images"
-      description: "Using a VLM to assess a list of image URLs and return the most suitable one for a description."
-      parameters:
-        - name: "image_urls"
-          description: "A list of image URLs to assess"
-        - name: "description"
-          description: "The description of the article to match the images against"
-      response:
-        - name: "best_image_url"
-          description: "The URL of the most suitable image for the article"
-    - name: "publish_article"
-      description: "Publish the article on the blogging platform."
-      parameters:
-        - name: "title"
-          description: "The title of the article"
-        - name: "content"
-          description: "The content of the article in markdown format"
-        - name: "cover_image_url"
-          description: "The URL of the cover image for the article"
-      response:
-        - name: "article_url"
-          description: "The URL of the published article"
+        - name: "result_1"
+          description: "description_of_result_1"
+        - name: "result_2"
+          description: "description_of_result_2"
 
   use_cases:
-    - "An author provides an article title and content, and the agent helps format it, find a cover image, and publish it."
+    - "use_cases_of_the_agent_function_1"
+    - "use_cases_of_the_agent_function_2"
+    - "use_cases_of_the_agent_function_3"
 
-checkpoint: "identify_hazards"
+checkpoint: None
 
 dropout: 0
