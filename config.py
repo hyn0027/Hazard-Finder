@@ -75,48 +75,11 @@ def agent_function_description(config) -> str:
     Construct a textual description of the agent's function from the configuration.
     """
 
-    agent_function_aim = config["agent_function"]["function_aim"]
+    agent_goal = config["agent_function"]["goal"]
     tools = config["agent_function"]["tools"]
-    use_cases = config["agent_function"]["use_cases"]
-
-    tool_descriptions = ""
-
-    for tool in tools:
-        tool_name = tool["name"]
-        tool_description = tool["description"]
-        parameters = tool.get("parameters", [])
-        response = tool.get("response", [])
-
-        # Format parameters and responses as bullet-point lists
-        if parameters:
-            parameters = [
-                f"- {param['name']}: {param['description']}" for param in parameters
-            ]
-            parameters = "\n".join(parameters)
-        else:
-            parameters = "None"
-
-        if response:
-            response = [f"- {resp['name']}: {resp['description']}" for resp in response]
-            response = "\n".join(response)
-        else:
-            response = "None"
-
-        tool_descriptions += (
-            f"Tool: {tool_name}\n"
-            f"Description: {tool_description}\n"
-            f"Parameters:\n{parameters}\n"
-            f"Response:\n{response}\n"
-            "\n"
-        )
-
-    # Format use cases as a bullet-point list
-    use_cases = [f"- {use_case.strip()}" for use_case in use_cases]
-    use_cases = "\n".join(use_cases)
 
     # Return a descriptive summary of the system
     return (
-        f"The agent function is to {agent_function_aim}. "
-        f"The agent may be used in the following use cases:\n{use_cases}\n\n"
-        f"The agent can use the following tools:\n{tool_descriptions} "
+        f"The agent is used for: {agent_goal}"
+        f"The agent has access to the following tools: {tools} "
     )

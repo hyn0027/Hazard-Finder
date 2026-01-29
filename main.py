@@ -110,21 +110,24 @@ async def main():
         hazards = load_from_json("hazards.json")
         logging.info("Hazards loaded from hazards.json")
 
-    return
+    # return
 
     # Step 5: Consolidate hazards unless skipped
     if "consolidate_hazards" not in config["skip_steps"]:
-        consolidated_hazards = consolidate_hazards(chatbot, substitution_dict, hazards)
-        pause_execution()
+        consolidated_hazards = await consolidate_hazards(
+            chatbot, substitution_dict, hazards, n_clusters=10, random_sample_size=0.04
+        )
         save_to_json(consolidated_hazards, "consolidated_hazards.json")
         logging.info("Consolidated hazards saved to consolidated_hazards.json")
+        pause_execution()
     else:
         consolidated_hazards = load_from_json("consolidated_hazards.json")
         logging.info("Consolidated hazards loaded from consolidated_hazards.json")
 
+    return
     # Step 6: First round of divide and consolidate
     if "divide_and_consolidate1" not in config["skip_steps"]:
-        consolidate_hazards1 = divide_and_consolidate(
+        consolidate_hazards1 = await divide_and_consolidate(
             chatbot,
             substitution_dict,
             consolidated_hazards,
@@ -140,7 +143,7 @@ async def main():
 
     # Step 7: Second round of divide and consolidate
     if "divide_and_consolidate2" not in config["skip_steps"]:
-        consolidate_hazards2 = divide_and_consolidate(
+        consolidate_hazards2 = await divide_and_consolidate(
             chatbot,
             substitution_dict,
             consolidate_hazards1,
@@ -156,7 +159,7 @@ async def main():
 
     # Step 8: Third round of divide and consolidate
     if "divide_and_consolidate3" not in config["skip_steps"]:
-        consolidate_hazards3 = divide_and_consolidate(
+        consolidate_hazards3 = await divide_and_consolidate(
             chatbot,
             substitution_dict,
             consolidate_hazards2,

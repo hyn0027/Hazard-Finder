@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor
 from OpenAIChatHelper import ChatCompletionEndPoint
 from OpenAIChatHelper.message import (
     SubstitutionDict,
@@ -33,15 +34,12 @@ async def identify_stakeholders(
             "system",
             TextContent(
                 "Based on the description of a software system and a specific function within that system that is enabled by LLM-powered agents, "
-                "identify and list all potential stakeholders related to the function, both direct and indirect. "
-                "Stakeholders may include those who develop, use, maintain, support, are affected by, or influence the function in any way. "
+                "identify and list stakeholders related to the function. "
+                # "Stakeholders may include those who develop, use, maintain, support, are affected by, or influence the function in any way. "
                 "The stakeholders should be related to the agentic function, rather than the overall system. \n\n"
                 "Format your response as follows:\n"
                 "1. Stakeholder Name - Short description of the stakeholder and how they are related to the function\n"
                 "2. Stakeholder Name - Short description of the stakeholder and how they are related to the function\n"
-                "3. Stakeholder Name - Short description of the stakeholder and how they are related to the function\n"
-                "4. Stakeholder Name - Short description of the stakeholder and how they are related to the function\n"
-                "5. Stakeholder Name - Short description of the stakeholder and how they are related to the function\n"
                 "...\n"
             ),
         )
@@ -437,32 +435,37 @@ async def identify_hazards(
 
 
 # Consolidate all hazard statements by clustering and summarizing them
-def consolidate_hazards(
+async def consolidate_hazards(
     chatbot: ChatCompletionEndPoint,
     substitution_dict: SubstitutionDict,
     hazards_comprehensive: list,
+    n_clusters=20,
+    random_sample_size=1.0,
 ):
-    hazard_num = 0
-    for item in hazards_comprehensive:
-        for loss, hazards in item["hazards"].items():
-            hazard_num += len(hazards)
-    logging.info(f"Total number of hazards: {hazard_num}")
-
     hazard_list = []
     for item in hazards_comprehensive:
-        hazard_list_per_item = []
         for loss, hazards in item["hazards"].items():
-            hazard_list_per_item.extend(hazards)
-        hazard_list_per_item = consolidate_hazard_list(
-            chatbot, substitution_dict, hazard_list_per_item, n_clusters=20
-        )
-        hazard_list.extend(hazard_list_per_item)
-    logging.info(f"Total number of consolidated hazards: {len(hazard_list)}")
-    return hazard_list
+            hazard_list.extend(hazards)
+    logging.info(f"Total number of hazards before consolidation: {len(hazard_list)}")
+
+    random_sample_size = min(1.0, random_sample_size)
+    hazard_list = random.sample(hazard_list, int(len(hazard_list) * random_sample_size))
+
+    logging.info(
+        f"Number of hazards after random sampling (size={random_sample_size}): {len(hazard_list)}"
+    )
+
+    consolidated_hazards = await consolidate_hazard_list(
+        chatbot, substitution_dict, hazard_list, n_clusters=n_clusters
+    )
+    logging.info(
+        f"Total number of hazards after consolidation: {len(consolidated_hazards)}"
+    )
+    return consolidated_hazards
 
 
 # Break down hazard list into segments, consolidate each segment
-def divide_and_consolidate(
+async def divide_and_consolidate(
     chatbot: ChatCompletionEndPoint,
     substitution_dict: SubstitutionDict,
     hazard_list: list,
@@ -473,7 +476,7 @@ def divide_and_consolidate(
     res = []
     for i in range(0, len(hazard_list), segment_size):
         segment = hazard_list[i : i + segment_size]
-        segment = consolidate_hazard_list(
+        segment = await consolidate_hazard_list(
             chatbot, substitution_dict, segment, n_clusters=n_clusters
         )
         res.extend(segment)
@@ -481,7 +484,7 @@ def divide_and_consolidate(
 
 
 # Core function to group similar hazards using embeddings and clustering
-def consolidate_hazard_list(
+async def consolidate_hazard_list(
     chatbot: ChatCompletionEndPoint,
     substitution_dict: SubstitutionDict,
     hazard_list: list,
@@ -489,7 +492,9 @@ def consolidate_hazard_list(
 ):
     if n_clusters != 1:
         logging.info("Getting embeddings for hazards...")
-        embeddings = [get_embedding(hazard) for hazard in hazard_list]
+
+        with ThreadPoolExecutor(max_workers=10) as executor:
+            embeddings = list(executor.map(get_embedding, hazard_list))
 
         logging.info("Performing clustering on embeddings...")
         embeddings = np.array(embeddings)
@@ -517,10 +522,9 @@ def consolidate_hazard_list(
         DevSysUserMessage(
             "system",
             TextContent(
-                "Based on the system description, review the list of state or conditions and identify those that have close meanings. "
-                "Merge similar state or conditions into a single concise entry."
-                "Each entry should be a concise, standalone description of a state or condition. "
-                "Do not include any cause, explanation, result, or solution to the state or condition. "
+                "Based on the description of a system with agentic components, review the list of potential risks and identify those that have close meanings. "
+                "Merge similar risks into a single entry. "
+                "Each entry should be a standalone description. "
                 "Format your response as follows:\n"
                 "1. Merged State or Condition 1\n"
                 "2. Merged State or Condition 2\n"
@@ -532,8 +536,10 @@ def consolidate_hazard_list(
         DevSysUserMessage(
             "user",
             TextContent(
-                "System Description:\n"
+                "Software System Description: \n"
                 "{system_description}\n\n"
+                "Agent Function Description: \n"
+                "{agent_function}\n\n"
                 "State or Condition List:\n"
                 "{hazard_list}\n\n"
                 "Merged States or Conditions:\n"
@@ -541,20 +547,69 @@ def consolidate_hazard_list(
         )
     )
 
-    res_list = []
-    for cluster, hazards in hazard_clusters.items():
-        hazards = [f"- {hazard}" for hazard in hazards]
-        substitution_dict["hazard_list"] = "\n".join(hazards)
-        res, meta = chatbot.completions(
-            message_list,
-            substitution_dict=substitution_dict,
+    semaphore = asyncio.Semaphore(20)
+
+    async def fetch_consolidated_hazards(
+        i,
+        cluster,
+        hazards,
+        message_list,
+        substitution_dict,
+        chatbot: ChatCompletionEndPoint,
+    ):
+        async with semaphore:
+            substitution_dict["hazard_list"] = "\n".join(
+                [f"- {hazard}" for hazard in hazards]
+            )
+            res, meta = await chatbot.completions(
+                message_list,
+                substitution_dict=substitution_dict,
+            )
+            consolidated_hazards_content: TextContent = res[0][0]
+            consolidated_hazards = consolidated_hazards_content.split_ordered_list()
+            consolidated_hazards = [h.strip() for h in consolidated_hazards]
+            logging.info(
+                f"Consolidated Hazards for Cluster {cluster} ({i+1}/{len(hazard_clusters)}):"
+            )
+            for h in consolidated_hazards:
+                logging.info(f"\t- {h}")
+            logging.info(f"{'*' * 5}")
+            return consolidated_hazards
+
+    tasks = []
+    for i, (cluster, hazards) in enumerate(hazard_clusters.items()):
+        tasks.append(
+            asyncio.create_task(
+                fetch_consolidated_hazards(
+                    i,
+                    cluster,
+                    hazards,
+                    deepcopy(message_list),
+                    deepcopy(substitution_dict),
+                    chatbot,
+                )
+            )
         )
-        consolidated_hazards: TextContent = res[0][0]
-        consolidated_hazards = consolidated_hazards.split_ordered_list()
-        consolidated_hazards = [h.strip() for h in consolidated_hazards]
-        logging.info(f"Consolidated Hazards for Cluster {cluster}:")
-        for h in consolidated_hazards:
-            logging.info(f"\t- {h}")
-        logging.info(f"{'*' * 5}")
+    results = await asyncio.gather(*tasks)
+    res_list = []
+    for consolidated_hazards in results:
         res_list.extend(consolidated_hazards)
     return res_list
+
+    # res_list = []
+    # for cluster, hazards in hazard_clusters.items():
+    #     hazards = [f"- {hazard}" for hazard in hazards]
+    #     substitution_dict["hazard_list"] = "\n".join(hazards)
+    #     res, meta = await chatbot.completions(
+    #         message_list,
+    #         substitution_dict=substitution_dict,
+    #     )
+    #     consolidated_hazards: TextContent = res[0][0]
+    #     consolidated_hazards = consolidated_hazards.split_ordered_list()
+    #     consolidated_hazards = [h.strip() for h in consolidated_hazards]
+    #     logging.info(f"Consolidated Hazards for Cluster {cluster}:")
+    #     for h in consolidated_hazards:
+    #         logging.info(f"\t- {h}")
+    #     logging.info(f"{'*' * 5}")
+    #     res_list.extend(consolidated_hazards)
+    # return res_list

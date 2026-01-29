@@ -2,63 +2,236 @@ chatbot:
   model: "gpt-5"
 
 system:
-  system_aim: "A blogging platform that enable authors to create, edit, and publish articles, and readers to browse and read them."
+  system_aim: "A electronic health record (EHR) system."
   use_cases:
-    - "A user publishes articles on the platform"
-    - "A user reads articles on the platform"
-    - "A user comments on articles"
-    - "A user likes or shares articles"
-    - "A user follows other authors"
+    - "Retrieve patient information based on various search criteria."
+    - "Access and manage patient conditions, observations, medication requests, and procedures."
+    - "Create new observations, medication requests, and service requests in the FHIR server."
+    - "Support healthcare providers in making informed decisions based on patient data."
+    - "Ensure compliance with healthcare data standards and regulations."
 
 agent_function:
-  function_aim: "Takes article title and content as input, help authors format their content, find a cover image, and publish the article."
-  tools:
-    - name: "fetch_image_API1"
-      description: "Fetch a list of image from ImageAPI1 based on a given query."
-      parameters:
-        - name: "query"
-          description: "The search query to find relevant images"
-      response:
-        - name: "image_urls"
-          description: "A list of URLs of relevant images found"
-        - name: "copyright_info"
-          description: 'A list of copyright information for each image; a copyright information for an image can be a specific license, "public domain", "full copyright", "unknown", or other similar terms'
-    - name: "fetch_image_API2"
-      description: "Fetch a list of image from ImageAPI2 based on a given query."
-      parameters:
-        - name: "query"
-          description: "The search query to find relevant images"
-      response:
-        - name: "image_urls"
-          description: "A list of URLs of relevant images found"
-        - name: "copyright_info"
-          description: 'A list of copyright information for each image; a copyright information for an image can be a specific license, "public domain", "full copyright", "unknown", or other similar terms'
-    - name: "assess_images"
-      description: "Using a VLM to assess a list of image URLs and return the most suitable one for a description."
-      parameters:
-        - name: "image_urls"
-          description: "A list of image URLs to assess"
-        - name: "description"
-          description: "The description of the article to match the images against"
-      response:
-        - name: "best_image_url"
-          description: "The URL of the most suitable image for the article"
-    - name: "publish_article"
-      description: "Publish the article on the blogging platform."
-      parameters:
-        - name: "title"
-          description: "The title of the article"
-        - name: "content"
-          description: "The content of the article in markdown format"
-        - name: "cover_image_url"
-          description: "The URL of the cover image for the article"
-      response:
-        - name: "article_url"
-          description: "The URL of the published article"
+  goal: "To assist healthcare providers in accessing, searching, creating, and managing patient records and related healthcare data in a FHIR-compliant manner."
+  tools: |
+    def get_patient(
+        patient_id: Annotated[
+            Optional[str | LogicList[str]], "The patient's Medical Record Number (MRN)."
+        ],
+        birthdate: Annotated[
+            Optional[datetime | DateTimeRange],
+            "The patient’s birthdate, either as a single date (YYYY-MM-DD) or as a datetime range (YYYY-MM-DDTHH:MM:SS±HH:MM)",
+        ],
+        family: Annotated[Optional[str | LogicList[str]], "The patient's family name."],
+        given: Annotated[
+            Optional[str | LogicList[str]],
+            "The patient's given name. May include first and middle names.",
+        ],
+        name: Annotated[
+            Optional[str | LogicList[str]],
+            "Any part of the patient's name. When discrete name parameters are used, such as 'family' or 'given', this parameter is ignored.",
+        ],
+        gender: Annotated[Optional[str | LogicList[str]], "The patient's legal sex."],
+        address: Annotated[
+            Optional[str | LogicList[str]],
+            "Any part of the patient's address, including street, city, state, and postal code.",
+        ],
+        address_city: Annotated[
+            Optional[str | LogicList[str]], "The city of the patient's address."
+        ],
+        address_postalcode: Annotated[
+            Optional[str | LogicList[str]], "The postal code of the patient's address."
+        ],
+        address_state: Annotated[
+            Optional[str | LogicList[str]], "The state of the patient's address."
+        ],
+        telecom: Annotated[
+            Optional[str | LogicList[str]],
+            "The patient's phone number (XXX-XXX-XXXX) or email address.",
+        ],
+        _count: Annotated[int, "Maximum number of results to return."],
+        _offset: Annotated[Optional[int], "Number of results to skip."],
+        _sort: Annotated[Optional[str], "Sort the results by a specific field."],
+    ) -> List[Patient]:
+        """
+        Search for patients in the FHIR server based on various criteria.
+
+        Returns:
+            A list of Patient objects matching the search criteria.
+
+        Raises:
+            HTTPError: If the FHIR server returns an error response.
+        """
+    def get_condition(
+        condition_id: Annotated[
+            Optional[str | LogicList[str]], "The unique identifier of the condition."
+        ],
+        patient_id: Annotated[
+            Optional[str | LogicList[str]],
+            "The patient's unique Medical Record Number (MRN).",
+        ],
+        code: Annotated[
+            Optional[str | LogicList[str]], "The icd-10 code of the condition."
+        ],
+        onset_date: Annotated[
+            Optional[datetime | DateTimeRange],
+            "The date when the condition began, in date time format (YYYY-MM-DDTHH:MM:SS±HH:MM). Can be a specific date or a range.",
+        ],
+        recorded_date: Annotated[
+            Optional[datetime | DateTimeRange],
+            "The date when the condition was recorded, in date time format (YYYY-MM-DDTHH:MM:SS±HH:MM). Can be a specific date or a range.",
+        ],
+        _count: Annotated[int, "Maximum number of results to return."],
+        _offset: Annotated[Optional[int], "Number of results to skip."],
+        _sort: Annotated[Optional[str], "Sort the results by a specific field."],
+    ) -> List[Condition]:
+        """
+        Retrieve conditions associated with a specific patient.
+
+        Returns:
+            List[Condition]: A list of Condition objects associated with the patient.
+
+        Raises:
+            HTTPError: If the FHIR server returns an error response.
+        """
+    def get_observation(
+        observation_id: Annotated[
+            Optional[str | LogicList[str]], "The unique identifier of the observation."
+        ],
+        patient_id: Annotated[
+            Optional[str | LogicList[str]],
+            "The patient's unique Medical Record Number (MRN).",
+        ],
+        status: Annotated[
+            Optional[str | LogicList[str]],
+            "The status of the observation (e.g., final, amended).",
+        ],
+        category: Annotated[
+            Optional[str | LogicList[str]],
+            "The category of the observation. Can be 'vital-signs', or 'laboratory'.",
+        ],
+        code: Annotated[Optional[str | LogicList[str]], "The code of the observation."],
+        effective_date: Annotated[
+            Optional[datetime | DateTimeRange],
+            "The date when the observation was made, in date time format (YYYY-MM-DDTHH:MM:SS±HH:MM). Can be a specific date or a range.",
+        ],
+        value_string: Annotated[
+            Optional[str | LogicList[str]], "The value of the observation as a string."
+        ],
+        value_quantity: Annotated[
+            Optional[float | ValueRange],
+            "The value of the observation as a quantity.",
+        ],
+        _count: Annotated[int, "Maximum number of results to return."],
+        _offset: Annotated[Optional[int], "Number of results to skip."],
+        _sort: Annotated[Optional[str], "Sort the results by a specific field."],
+    ) -> List[Observation]:
+        """
+        Retrieve observations from the FHIR server.
+
+        Returns:
+            List[Observation]: A list of Observation objects.
+
+        Raises:
+            HTTPError: If the FHIR server returns an error response.
+        """
+    def post_observation(observation: Observation) -> Observation:
+      """
+      Create a new observation in the FHIR server.
+
+      Returns:
+          Observation: The created Observation object.
+
+      Raises:
+          HTTPError: If the FHIR server returns an error response.
+      """
+    def get_medication_request(
+        medication_id: Annotated[
+            Optional[str | LogicList[str]],
+            "The unique identifier of the medication request.",
+        ],
+        status: Annotated[
+            Optional[str | LogicList[str]], "The status of the medication request."
+        ],
+        intent: Annotated[
+            Optional[str | LogicList[str]], "The intent of the medication request."
+        ],
+        patient_id: Annotated[
+            Optional[str | LogicList[str]],
+            "The patient's unique Medical Record Number (MRN).",
+        ],
+        authored_on: Annotated[
+            Optional[datetime | DateTimeRange],
+            "The date when the medication request was authored, in date time format (YYYY-MM-DDTHH:MM:SS±HH:MM). Can be a specific date or a range.",
+        ],
+        _count: Annotated[int, "Maximum number of results to return."],
+        _offset: Annotated[Optional[int], "Number of results to skip."],
+        _sort: Annotated[Optional[str], "Sort the results by a specific field."],
+    ) -> List[MedicationRequest]:
+        """
+        Retrieve medication requests from the FHIR server.
+
+        Returns:
+            List[MedicationRequest]: A list of MedicationRequest objects.
+
+        Raises:
+            HTTPError: If the FHIR server returns an error response.
+        """
+    def post_medication_request(medication_request: MedicationRequest) -> MedicationRequest:
+        """
+        Create a new medication request in the FHIR server.
+
+        Returns:
+            MedicationRequest: The created MedicationRequest object.
+
+        Raises:
+            HTTPError: If the FHIR server returns an error response.
+        """
+    def get_procedure(
+        procedure_id: Annotated[
+            Optional[str | LogicList[str]], "The unique identifier of the procedure."
+        ],
+        patient_id: Annotated[
+            Optional[str | LogicList[str]],
+            "The patient's unique Medical Record Number (MRN).",
+        ],
+        code: Annotated[
+            Optional[str | LogicList[str]],
+            "The code of the procedure, following CPT standards.",
+        ],
+        performed_date_time: Annotated[
+            Optional[datetime | DateTimeRange],
+            "The date when the procedure was performed, in date time format (YYYY-MM-DDTHH:MM:SS±HH:MM). Can be a specific date or a range.",
+        ],
+        _count: Annotated[int, "Maximum number of results to return."],
+        _offset: Annotated[Optional[int], "Number of results to skip."],
+        _sort: Annotated[Optional[str], "Sort the results by a specific field."],
+    ) -> List[Procedure]:
+        """
+        Retrieve procedures from the FHIR server.
+
+        Returns:
+            List[Procedure]: A list of Procedure objects.
+
+        Raises:
+            HTTPError: If the FHIR server returns an error response.
+        """
+    def post_service_request(service_request: ServiceRequest) -> ServiceRequest:
+      """
+      Create a new service request in the FHIR server.
+
+      Returns:
+          ServiceRequest: The created ServiceRequest object.
+      Raises:
+          HTTPError: If the FHIR server returns an error response.
+      """
 
   use_cases:
-    - "An author provides an article title and content, and the agent helps format it, find a cover image, and publish it."
+    - "A user wants to cancel their flight booking"
+    - "A user wants to request a refund for a cancelled flight"
+    - "A user wants to ask about policy on cancellations and refunds"
+    - "A user wants to change their flight booking"
+    - "A user wants to rebook a flight because of delay"
+    - "A user wants to modify tickets for a part of the passenger in a group booking"
 
-checkpoint: "identify_hazards"
-
+checkpoint: "consolidate_hazards"
 dropout: 0
