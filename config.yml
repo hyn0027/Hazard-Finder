@@ -2,41 +2,21 @@ chatbot:
   model: "gpt-5"
 
 system:
-  system_aim: "aim of the software system"
+  system_aim: |
+    A healthcare communication system that uses ML models to process inbound fax referrals, extract patient and clinical information, route to appropriate providers, and handle call center inquiries through conversational AI. 
+    The system includes document classification, data extraction, voice recognition, intent classification, and automated response generation while monitoring extraction accuracy, routing precision, conversation quality, and escalation patterns.
+  ML_usage: |
+    Computer vision models process and extract data from inbound fax referrals (OCR); 
+    Classification models categorize referral types and urgency levels; 
+    NLP models extract patient demographics, clinical information, and provider details; 
+    Routing models match referrals to appropriate specialists based on specialty, availability, and criteria; 
+    Validation models detect incomplete or missing information requiring human review.
   use_cases:
-    - "Use case 1"
-    - "Use case 2"
-    - "Use case 3"
+    - "Referral coordinators use the system to automatically process incoming fax referrals and route them to appropriate providers"
+    - "Medical practices and specialists use the system to receive, triage, and prioritize patient referrals based on urgency and clinical criteria"
+    - "Healthcare networks use the system to track referral volumes, routing accuracy, and processing times across multiple facilities"
+    - "Quality and operations teams use the system to monitor extraction accuracy, identify incomplete referrals, and optimize routing workflows"
 
-agent_function:
-  function_aim: "aim of the agent function"
-  tools:
-    - name: "name_of_tool_1"
-      description: "description_of_tool_1"
-      parameters:
-        - name: "param_1"
-          description: "description_of_param_1"
-        - name: "param_2"
-          description: "description_of_param_2"
-      response:
-        - name: "result_1"
-          description: "description_of_result_1"
-    - name: "name_of_tool_2"
-      description: "description_of_tool_2"
-      parameters:
-        - name: "param_1"
-          description: "description_of_param_1"
-      response:
-        - name: "result_1"
-          description: "description_of_result_1"
-        - name: "result_2"
-          description: "description_of_result_2"
+checkpoint: identify_hazards
 
-  use_cases:
-    - "use_cases_of_the_agent_function_1"
-    - "use_cases_of_the_agent_function_2"
-    - "use_cases_of_the_agent_function_3"
-
-checkpoint: None
-
-dropout: 0
+dropout: 0.3

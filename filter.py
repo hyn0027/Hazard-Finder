@@ -31,9 +31,9 @@ async def filter_value(
         DevSysUserMessage(
             "system",
             TextContent(
-                "Based on the description of a software system and a specific function within that system that is enabled by LLM-powered agents, "
-                "and considering a particular stakeholder associated with that function, "
-                "given a core abstract value that the stakeholder expects from the function, "
+                "Based on the description of a software system with ML model components, "
+                "and considering a particular stakeholder associated with this software system, "
+                "given a core abstract value that the stakeholder expects from the software system, "
                 "evaluate the importance of this value from the perspective of the general social good.\n"
                 "Classify the importance as:\n"
                 "- High: The value is very important and should always be enforced.\n"
@@ -52,8 +52,6 @@ async def filter_value(
             TextContent(
                 "Software System Description: \n"
                 "{system_description}\n\n"
-                "Agent Function Description: \n"
-                "{agent_function}\n\n"
                 "Stakeholder:\n"
                 "{stakeholder}\n\n"
                 "Value:\n"
@@ -168,9 +166,9 @@ async def filter_loss(
         DevSysUserMessage(
             "system",
             TextContent(
-                "Based on the description of a software system and a specific function within that system that is enabled by LLM-powered agents, "
-                "and considering a particular stakeholder associated with that function, "
-                "given a core abstract loss that the stakeholder may face from the function, "
+                "Based on the description of a software system with ML model components, "
+                "and considering a particular stakeholder associated with this software system, "
+                "given a core abstract loss that the stakeholder may face from the software system, "
                 "evaluate the severity of this loss from the perspective of the general social good.\n"
                 "Classify the severity as:\n"
                 "- High: The loss is very severe and should always be mitigated.\n"
@@ -189,8 +187,6 @@ async def filter_loss(
             TextContent(
                 "Software System Description: \n"
                 "{system_description}\n\n"
-                "Agent Function Description: \n"
-                "{agent_function}\n\n"
                 "Stakeholder:\n"
                 "{stakeholder}\n\n"
                 "Loss:\n"

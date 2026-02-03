@@ -32,16 +32,13 @@ async def identify_stakeholders(
         DevSysUserMessage(
             "system",
             TextContent(
-                "Based on the description of a software system and a specific function within that system that is enabled by LLM-powered agents, "
-                "identify and list all potential stakeholders related to the function, both direct and indirect. "
-                "Stakeholders may include those who develop, use, maintain, support, are affected by, or influence the function in any way. "
-                "The stakeholders should be related to the agentic function, rather than the overall system. \n\n"
+                "Based on the description of a software system with ML model components, "
+                "identify and list potential stakeholders related to the software system, both direct and indirect. "
+                "Stakeholders may include those who build, use, are affected by, or influence the software system. "
+                "For similar stakeholders, use an umbrella term to represent them and avoid duplication. "
                 "Format your response as follows:\n"
-                "1. Stakeholder Name - Short description of the stakeholder and how they are related to the function\n"
-                "2. Stakeholder Name - Short description of the stakeholder and how they are related to the function\n"
-                "3. Stakeholder Name - Short description of the stakeholder and how they are related to the function\n"
-                "4. Stakeholder Name - Short description of the stakeholder and how they are related to the function\n"
-                "5. Stakeholder Name - Short description of the stakeholder and how they are related to the function\n"
+                "1. Stakeholder Name - Short description of the stakeholder and how they are related to the software system\n"
+                "2. Stakeholder Name - Short description of the stakeholder and how they are related to the software system\n"
                 "...\n"
             ),
         )
@@ -54,8 +51,6 @@ async def identify_stakeholders(
             TextContent(
                 "Software System Description: \n"
                 "{system_description}\n\n"
-                "Agent Function Description: \n"
-                "{agent_function}\n\n"
                 "Stakeholders:\n"
             ),
         )
@@ -95,18 +90,15 @@ async def identify_values(
         DevSysUserMessage(
             "system",
             TextContent(
-                "Based on the description of a software system and a specific function within the system that is enabled by LLM-powered agents, "
-                "and considering a particular stakeholder associated with that function, "
-                "identify the core high-level, abstract values that the stakeholder expects from the function. "
+                "Based on the description of a software system with ML model components, "
+                "and considering a particular stakeholder associated with this software system, "
+                "identify the core high-level, abstract values that the stakeholder expects from the software system. "
                 "Each value should focus on a single topic and avoid combining multiple aspects. "
-                "The values should be related to the agent function, rather than the overall system. "
                 "\n\n"
                 "Format your response as follows:\n"
                 "1. A Short phrase describing value 1\n"
                 "2. A Short phrase describing value 2\n"
                 "3. A Short phrase describing value 3\n"
-                "4. A Short phrase describing value 4\n"
-                "5. A Short phrase describing value 5\n"
                 "... \n"
             ),
         )
@@ -119,8 +111,6 @@ async def identify_values(
             TextContent(
                 "Software System Description: \n"
                 "{system_description}\n\n"
-                "Agent Function Description: \n"
-                "{agent_function}\n\n"
                 "Stakeholder:\n"
                 "{stakeholder}\n\n"
                 "Values and Goals:\n"
@@ -186,12 +176,12 @@ async def identify_losses(
         DevSysUserMessage(
             "system",
             TextContent(
-                "Based on the description of a software system and a specific function within that system that is enabled by LLM-powered agents, "
-                "and considering a particular stakeholder associated with that function, "
-                "take a core abstract value that the stakeholder expects from the function, "
+                "Based on the description of a software system with ML model components, "
+                "and considering a particular stakeholder associated with this software system, "
+                "take a core abstract value that the stakeholder expects from the software system, "
                 "and reverse it into the corresponding core abstract loss. "
                 "Format your response as follows:\n"
-                "A Short phrase describing the loss"
+                "<A Short phrase describing the loss>"
             ),
         )
     )
@@ -203,8 +193,6 @@ async def identify_losses(
             TextContent(
                 "Software System Description: \n"
                 "{system_description}\n\n"
-                "Agent Function Description: \n"
-                "{agent_function}\n\n"
                 "Stakeholder:\n"
                 "{stakeholder}\n\n"
                 "Values or goal:\n"
@@ -311,18 +299,17 @@ async def identify_hazards(
         DevSysUserMessage(
             "system",
             TextContent(
-                "Based on the description of a software system and a specific function within that system that is enabled by LLM-powered agents, "
-                "given a specific stakeholder, and given a specific loss that the stakeholder does not expect from the function, "
-                "focusing what the agent function can do,"
-                "identify and list potential states and conditions of the agent function that could directly lead to this loss under worst-case conditions. "
+                "Based on the description of a software system with ML model components, "
+                "given a specific stakeholder, and given a specific loss that the stakeholder does not expect from the software system, "
+                "focusing what the software system can do,"
+                "identify and list potential states and conditions of the software system that could directly lead to this loss under worst-case conditions. "
+                "These states and conditions should be related to the ML model components of the software system, or its relevant artifacts, such as model input, model trained data, model predictions, social impact of the model output, training and other infrastructure, data pipelines, deployment environment, etc. "
                 "Provide concise, standalone descriptions of these states and conditions. "
                 "Do not include any cause, explanation, result, or solution to the state or condition. "
                 "Format your response as follows:\n"
                 "1. State or condition 1\n"
                 "2. State or condition 2\n"
                 "3. State or condition 3\n"
-                "4. State or condition 4\n"
-                "5. State or condition 5\n"
                 "... \n"
                 "... \n"
             ),
@@ -336,8 +323,6 @@ async def identify_hazards(
             TextContent(
                 "Software System Description: \n"
                 "{system_description}\n\n"
-                "Agent Function Description: \n"
-                "{agent_function}\n\n"
                 "Stakeholder:\n"
                 "{stakeholder}\n\n"
                 "Loss:\n"

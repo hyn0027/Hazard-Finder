@@ -36,11 +36,8 @@ async def main():
 
     # Generate and log system description, and store in the substitution dictionary
     system_description_message = system_description(config)
-    agent_function = agent_function_description(config)
     logging.info(f"System description: {system_description_message}")
-    logging.info(f"Agent function description: {agent_function}")
     substitution_dict["system_description"] = system_description_message
-    substitution_dict["agent_function"] = agent_function
     pause_execution()
 
     # Step 1: Identify stakeholders unless skipped via config
@@ -59,7 +56,7 @@ async def main():
 
     if "identify_values" not in config["skip_steps"]:
         values = await identify_values(
-            chatbot, substitution_dict, stakeholders, dropout=config.get("dropout", 0.0)
+            chatbot, substitution_dict, stakeholders, dropout=0.0
         )
         save_to_json(values, "values.json")
         logging.info("Values saved to values.json")

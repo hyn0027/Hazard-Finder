@@ -59,6 +59,7 @@ def system_description(config) -> str:
     Construct a textual description of the software system from the configuration.
     """
     system_aim = config["system"]["system_aim"]
+    ML_usage = config["system"]["ML_usage"]
     use_cases = config["system"]["use_cases"]
 
     use_cases = [f"- {use_case}" for use_case in use_cases]
@@ -66,6 +67,7 @@ def system_description(config) -> str:
 
     return (
         f"The software system is designed to {system_aim}. "
+        f"It utilizes machine learning in the following ways: {ML_usage}. "
         f"The system may be used in the following use cases:\n{use_cases} "
     )
 

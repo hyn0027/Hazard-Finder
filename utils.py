@@ -4,6 +4,7 @@ import json
 
 # Utility function to pause program execution based on user input
 def pause_execution():
+    return
     # Prompts the user to continue or exit the program
     while True:
         response = input("Do you want to continue? (Y/N): ")
