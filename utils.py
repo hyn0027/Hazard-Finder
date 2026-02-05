@@ -4,17 +4,18 @@ import json
 
 # Utility function to pause program execution based on user input
 def pause_execution():
+    return
     # Prompts the user to continue or exit the program
-    # while True:
-    #     response = input("Do you want to continue? (Y/N): ")
-    #     if response.lower() == "y":
-    #         break  # Continue execution
-    #     elif response.lower() == "n":
-    #         sys.exit(0)  # Exit the program
-    #     else:
-    #         print("Invalid input. Please enter Y or N.")  # Re-prompt on invalid input
+    while True:
+        response = input("Do you want to continue? (Y/N): ")
+        if response.lower() == "y":
+            break  # Continue execution
+        elif response.lower() == "n":
+            sys.exit(0)  # Exit the program
+        else:
+            print("Invalid input. Please enter Y or N.")  # Re-prompt on invalid input
     # continue
-    pass
+    # pass
 
 
 # Utility function to save a Python object to a JSON file

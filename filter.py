@@ -31,9 +31,9 @@ async def filter_value(
         DevSysUserMessage(
             "system",
             TextContent(
-                "Based on the description of a software system and a specific function within that system that is enabled by LLM-powered agents, "
-                "and considering a particular stakeholder associated with that function, "
-                "given a core abstract value that the stakeholder expects from the function, "
+                "Based on the description of a software system and a specific LLM-powered agents within that system, "
+                "and considering a particular stakeholder associated with that agent, "
+                "given a core abstract value that the stakeholder expects from the agent, "
                 "evaluate the importance of this value from the perspective of the general social good.\n"
                 "Classify the importance as:\n"
                 "- High: The value is very important and should always be enforced.\n"
@@ -52,7 +52,7 @@ async def filter_value(
             TextContent(
                 "Software System Description: \n"
                 "{system_description}\n\n"
-                "Agent Function Description: \n"
+                "Agent Description: \n"
                 "{agent_function}\n\n"
                 "Stakeholder:\n"
                 "{stakeholder}\n\n"
@@ -125,36 +125,6 @@ async def filter_value(
             value_list[i]["values"] = []
     return value_list
 
-    # for i, item in enumerate(value_list):
-    #     name = item["name"]
-    #     description = item["description"]
-    #     substitution_dict["stakeholder"] = f"{item['name']} - {item['description']}"
-    #     if "values" not in item or len(item["values"]) == 0:
-    #         logging.info(f"No values for {item['name']}, skipping...")
-    #         continue
-    #     values = item["values"]
-    #     filtered_values = []
-    #     for value in values:
-    #         cnt += 1
-    #         logging.info(f"Evaluating value {cnt}/{total_value_cnt}")
-    #         if dropout > 0 and random.random() < dropout:
-    #             continue
-    #         substitution_dict["value"] = value
-    #         res, meta = chatbot.completions(
-    #             message_list,
-    #             substitution_dict=substitution_dict,
-    #         )
-    #         importance_content: TextContent = res[0][0]
-    #         importance_text = importance_content.text.strip()
-    #         logging.info(f"Value: {value}")
-    #         logging.info(f"Importance: {importance_text}")
-    #         first_answer_line = importance_text.split("\n")[0].strip().lower()
-    #         if "high" in first_answer_line:
-    #             filtered_values.append(value)
-    #     value_list[i]["original_values"] = value_list[i]["values"]
-    #     value_list[i]["values"] = filtered_values
-    # return value_list
-
 
 async def filter_loss(
     chatbot: ChatCompletionEndPoint,
@@ -168,9 +138,9 @@ async def filter_loss(
         DevSysUserMessage(
             "system",
             TextContent(
-                "Based on the description of a software system and a specific function within that system that is enabled by LLM-powered agents, "
-                "and considering a particular stakeholder associated with that function, "
-                "given a core abstract loss that the stakeholder may face from the function, "
+                "Based on the description of a software system and a specific LLM-powered agents within that system, "
+                "and considering a particular stakeholder associated with that agent, "
+                "given a core abstract loss that the stakeholder may face from the agent, "
                 "evaluate the severity of this loss from the perspective of the general social good.\n"
                 "Classify the severity as:\n"
                 "- High: The loss is very severe and should always be mitigated.\n"
@@ -189,7 +159,7 @@ async def filter_loss(
             TextContent(
                 "Software System Description: \n"
                 "{system_description}\n\n"
-                "Agent Function Description: \n"
+                "Agent Description: \n"
                 "{agent_function}\n\n"
                 "Stakeholder:\n"
                 "{stakeholder}\n\n"
@@ -264,33 +234,3 @@ async def filter_loss(
             )
             loss_list[i]["losses"] = []
     return loss_list
-
-    # for i, item in enumerate(loss_list):
-    #     name = item["name"]
-    #     description = item["description"]
-    #     losses = item["losses"]
-    #     substitution_dict["stakeholder"] = f"{item['name']} - {item['description']}"
-    #     if "losses" not in item or len(item["losses"]) == 0:
-    #         logging.info(f"No losses for {item['name']}, skipping...")
-    #         continue
-    #     filtered_losses = []
-    #     for loss in losses:
-    #         cnt += 1
-    #         logging.info(f"Evaluating loss {cnt}/{total_loss_cnt}")
-    #         if dropout > 0 and random.random() < dropout:
-    #             continue
-    #         substitution_dict["loss"] = loss
-    #         res, meta = chatbot.completions(
-    #             message_list,
-    #             substitution_dict=substitution_dict,
-    #         )
-    #         severity_content: TextContent = res[0][0]
-    #         severity_text = severity_content.text.strip()
-    #         logging.info(f"Loss: {loss}")
-    #         logging.info(f"Severity: {severity_text}")
-    #         first_answer_line = severity_text.split("\n")[0].strip().lower()
-    #         if "high" in first_answer_line:
-    #             filtered_losses.append(loss)
-    #     loss_list[i]["original_losses"] = loss_list[i]["losses"]
-    #     loss_list[i]["losses"] = filtered_losses
-    # return loss_list

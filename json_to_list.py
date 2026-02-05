@@ -8,6 +8,9 @@ with open(HAZARD_JSON, "r") as f:
 res = []
 
 for item in hazard_json:
+    if "hazards" not in item:
+        print(f"No hazards for item: {item['name']}")
+        continue
     for loss in item["hazards"]:
         for hazard in item["hazards"][loss]:
             # res.append(

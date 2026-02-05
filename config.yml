@@ -226,12 +226,9 @@ agent_function:
       """
 
   use_cases:
-    - "A user wants to cancel their flight booking"
-    - "A user wants to request a refund for a cancelled flight"
-    - "A user wants to ask about policy on cancellations and refunds"
-    - "A user wants to change their flight booking"
-    - "A user wants to rebook a flight because of delay"
-    - "A user wants to modify tickets for a part of the passenger in a group booking"
+    - "Assist healthcare providers in retrieving patient information based on various search criteria."
+    - "Assist healthcare providers in writing new observations, medication requests, and service requests to the FHIR server."
+    - "Support healthcare providers in their general workflow"
 
-checkpoint: "consolidate_hazards"
+checkpoint: None
 dropout: 0

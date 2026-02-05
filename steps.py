@@ -33,13 +33,13 @@ async def identify_stakeholders(
         DevSysUserMessage(
             "system",
             TextContent(
-                "Based on the description of a software system and a specific function within that system that is enabled by LLM-powered agents, "
-                "identify and list stakeholders related to the function. "
-                # "Stakeholders may include those who develop, use, maintain, support, are affected by, or influence the function in any way. "
-                "The stakeholders should be related to the agentic function, rather than the overall system. \n\n"
+                "Based on the description of a software system and a specific LLM-powered agents within that system, "
+                "identify and list stakeholders related to the agent. "
+                "The stakeholders should be related to the agent, rather than the overall system. \n\n"
+                "Use umbrella terms to represent groups of stakeholders when appropriate. \n\n"
                 "Format your response as follows:\n"
-                "1. Stakeholder Name - Short description of the stakeholder and how they are related to the function\n"
-                "2. Stakeholder Name - Short description of the stakeholder and how they are related to the function\n"
+                "1. Stakeholder Name - Short description of the stakeholder and how they are related to the agent\n"
+                "2. Stakeholder Name - Short description of the stakeholder and how they are related to the agent\n"
                 "...\n"
             ),
         )
@@ -52,7 +52,7 @@ async def identify_stakeholders(
             TextContent(
                 "Software System Description: \n"
                 "{system_description}\n\n"
-                "Agent Function Description: \n"
+                "Agent Description: \n"
                 "{agent_function}\n\n"
                 "Stakeholders:\n"
             ),
@@ -93,11 +93,11 @@ async def identify_values(
         DevSysUserMessage(
             "system",
             TextContent(
-                "Based on the description of a software system and a specific function within the system that is enabled by LLM-powered agents, "
-                "and considering a particular stakeholder associated with that function, "
-                "identify the core high-level, abstract values that the stakeholder expects from the function. "
+                "Based on the description of a software system and a specific LLM-powered agents within that system, "
+                "and considering a particular stakeholder associated with that agent, "
+                "identify the core high-level, abstract values that the stakeholder expects from the agent. "
                 "Each value should focus on a single topic and avoid combining multiple aspects. "
-                "The values should be related to the agent function, rather than the overall system. "
+                "The values should be related to the agent, rather than the overall system. "
                 "\n\n"
                 "Format your response as follows:\n"
                 "1. A Short phrase describing value 1\n"
@@ -117,7 +117,7 @@ async def identify_values(
             TextContent(
                 "Software System Description: \n"
                 "{system_description}\n\n"
-                "Agent Function Description: \n"
+                "Agent Description: \n"
                 "{agent_function}\n\n"
                 "Stakeholder:\n"
                 "{stakeholder}\n\n"
@@ -184,9 +184,9 @@ async def identify_losses(
         DevSysUserMessage(
             "system",
             TextContent(
-                "Based on the description of a software system and a specific function within that system that is enabled by LLM-powered agents, "
-                "and considering a particular stakeholder associated with that function, "
-                "take a core abstract value that the stakeholder expects from the function, "
+                "Based on the description of a software system and a specific LLM-powered agents within that system, "
+                "and considering a particular stakeholder associated with that agent, "
+                "take a core abstract value that the stakeholder expects from the agent, "
                 "and reverse it into the corresponding core abstract loss. "
                 "Format your response as follows:\n"
                 "A Short phrase describing the loss"
@@ -201,7 +201,7 @@ async def identify_losses(
             TextContent(
                 "Software System Description: \n"
                 "{system_description}\n\n"
-                "Agent Function Description: \n"
+                "Agent Description: \n"
                 "{agent_function}\n\n"
                 "Stakeholder:\n"
                 "{stakeholder}\n\n"
@@ -309,18 +309,16 @@ async def identify_hazards(
         DevSysUserMessage(
             "system",
             TextContent(
-                "Based on the description of a software system and a specific function within that system that is enabled by LLM-powered agents, "
-                "given a specific stakeholder, and given a specific loss that the stakeholder does not expect from the function, "
-                "focusing what the agent function can do,"
-                "identify and list potential states and conditions of the agent function that could directly lead to this loss under worst-case conditions. "
-                "Provide concise, standalone descriptions of these states and conditions. "
-                "Do not include any cause, explanation, result, or solution to the state or condition. "
+                "Based on the description of a software system and a specific LLM-powered agents within that system, "
+                "given a specific stakeholder, and given a specific loss that the stakeholder does not expect from the agent, "
+                "focusing what the agent can do,"
+                "identify and list potential actions of the agent that could directly lead to this loss under worst-case conditions. "
+                "Provide concise, standalone descriptions of these actions. "
+                "Do not include any cause, explanation, result, or solution to the action. "
                 "Format your response as follows:\n"
-                "1. State or condition 1\n"
-                "2. State or condition 2\n"
-                "3. State or condition 3\n"
-                "4. State or condition 4\n"
-                "5. State or condition 5\n"
+                "1. Action 1\n"
+                "2. Action 2\n"
+                "3. Action 3\n"
                 "... \n"
                 "... \n"
             ),
@@ -334,13 +332,13 @@ async def identify_hazards(
             TextContent(
                 "Software System Description: \n"
                 "{system_description}\n\n"
-                "Agent Function Description: \n"
+                "Agent Description: \n"
                 "{agent_function}\n\n"
                 "Stakeholder:\n"
                 "{stakeholder}\n\n"
                 "Loss:\n"
                 "{loss}\n\n"
-                "States and Conditions that could Lead to this Loss (Worst-Case Scenarios):\n"
+                "Actions of the Agent that could Lead to this Loss:\n"
             ),
         )
     )
@@ -538,7 +536,7 @@ async def consolidate_hazard_list(
             TextContent(
                 "Software System Description: \n"
                 "{system_description}\n\n"
-                "Agent Function Description: \n"
+                "Agent Description: \n"
                 "{agent_function}\n\n"
                 "State or Condition List:\n"
                 "{hazard_list}\n\n"
@@ -595,21 +593,3 @@ async def consolidate_hazard_list(
     for consolidated_hazards in results:
         res_list.extend(consolidated_hazards)
     return res_list
-
-    # res_list = []
-    # for cluster, hazards in hazard_clusters.items():
-    #     hazards = [f"- {hazard}" for hazard in hazards]
-    #     substitution_dict["hazard_list"] = "\n".join(hazards)
-    #     res, meta = await chatbot.completions(
-    #         message_list,
-    #         substitution_dict=substitution_dict,
-    #     )
-    #     consolidated_hazards: TextContent = res[0][0]
-    #     consolidated_hazards = consolidated_hazards.split_ordered_list()
-    #     consolidated_hazards = [h.strip() for h in consolidated_hazards]
-    #     logging.info(f"Consolidated Hazards for Cluster {cluster}:")
-    #     for h in consolidated_hazards:
-    #         logging.info(f"\t- {h}")
-    #     logging.info(f"{'*' * 5}")
-    #     res_list.extend(consolidated_hazards)
-    # return res_list
