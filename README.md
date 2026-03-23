@@ -2,9 +2,7 @@
 
 ## Installation
 
-Install this (can only be installed locally right now) <https://github.com/hyn0027/OpenAIChatHelper>
-
-And then `pip install -r requirements.txt`.
+`pip install -r requirements.txt`.
 
 ## Usage
 
