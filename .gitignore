@@ -199,10 +199,6 @@ cython_debug/
 toysys/
 .DS_Store
 
-*.json
-*.log
-# 
-*/config.yml
 
 
 # exclude calendar_agent and github_agent folders (they are visible in the repo)
